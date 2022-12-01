@@ -9,6 +9,7 @@ import com.springboot.rest.api.blog.controller.dto.PostDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,6 +80,10 @@ public abstract class TestUtils {
 
     public static String requiredMsg(String field) {
         return String.format("%s is required", field);
+    }
+
+    public static String formatDate(LocalDateTime date) {
+        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"));
     }
 
 }

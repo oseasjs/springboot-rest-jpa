@@ -31,8 +31,8 @@ public class PostControllerTest extends AbstractControllerTest {
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(jsonPath("$.id", is(postMocked.getId().intValue())))
             .andExpect(jsonPath("$.title", is(postMocked.getTitle())))
-            .andExpect(jsonPath("$.content", is(postMocked.getContent())));
-//            .andExpect(jsonPath("$.creationDate", containsString(postMocked.getCreationDate().toString())));
+            .andExpect(jsonPath("$.content", is(postMocked.getContent())))
+            .andExpect(jsonPath("$.creationDate", is(formatDate(postMocked.getCreationDate()))));
 
     }
 

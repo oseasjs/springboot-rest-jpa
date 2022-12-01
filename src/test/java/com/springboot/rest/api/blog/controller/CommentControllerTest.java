@@ -5,6 +5,7 @@ import com.springboot.rest.api.blog.model.Post;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +36,8 @@ public class CommentControllerTest extends AbstractControllerTest {
             .andExpect(jsonPath("$[0].id", is(commentMocked.getId().intValue())))
             .andExpect(jsonPath("$[0].postId", is(commentMocked.getPost().getId().intValue())))
             .andExpect(jsonPath("$[0].content", is(commentMocked.getContent())))
-            .andExpect(jsonPath("$[0].author", is(commentMocked.getAuthor())));
-//            .andExpect(jsonPath("$[0].creationDate", containsString(commentMocked.getCreationDate().toString())));
+            .andExpect(jsonPath("$[0].author", is(commentMocked.getAuthor())))
+            .andExpect(jsonPath("$[0].creationDate", is(formatDate(commentMocked.getCreationDate()))));
 
     }
 
