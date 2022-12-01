@@ -26,6 +26,8 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - name: Run Tests
-        run: mvn clean test
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        run: mvn integration-test
+      - name: Upload coverage to CodeCov
+        run: bash <(curl -s https://codecov.io/bash)
+#      - name: Upload coverage to Codecov
+#        uses: codecov/codecov-action@v3
