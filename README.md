@@ -2,9 +2,9 @@
 
 ### Build Branches Status
 
-| Branch        | Build         | Coverage  |
-| ------------- |:-------------:| ---------:|
-| Main          | ![Build](https://github.com/oseasjs/springboot-rest-api/workflows/CI/badge.svg?branch=main)  | [![codecov](https://codecov.io/gh/oseasjs/springboot-rest-api/branch/main/graph/badge.svg)](https://codecov.io/gh/oseasjs/springboot-rest-api/branch/main) |
+| Branch        |                                            Build                                            |                                                                                                                                                   Coverage |
+| ------------- |:-------------------------------------------------------------------------------------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| Main          | ![Build](https://github.com/oseasjs/springboot-rest-jpa/workflows/CI/badge.svg?branch=main) | [![codecov](https://codecov.io/gh/oseasjs/springboot-rest-jpa/branch/main/graph/badge.svg)](https://codecov.io/gh/oseasjs/springboot-rest-jpa/branch/main) |
 
 ### Description
 
