@@ -1,44 +1,56 @@
 package com.springboot.rest.api.blog.controller;
 
-import com.springboot.rest.api.blog.dto.CommentDto;
-import com.springboot.rest.api.blog.dto.NewCommentDto;
+import com.springboot.rest.api.blog.controller.dto.CommentDto;
+import com.springboot.rest.api.blog.controller.dto.NewCommentDto;
+import com.springboot.rest.api.blog.controller.mapper.CommentMapper;
 import com.springboot.rest.api.blog.service.CommentService;
-import org.springframework.http.HttpHeaders;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/posts/{postId}/comments")
+@RequestMapping("/v1/posts/{postId}/comments")
+@Api(value = "Post Comments API for the Blog")
+@AllArgsConstructor
 public class CommentController {
 
     private CommentService commentService;
 
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Get All Comments from a Post", produces = "application/json")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 400, message = "Bad Request")
+    })
     public List<CommentDto> getCommentsForPost(@PathVariable Long postId) {
-        return this.commentService.getCommentsForPost(postId);
+        return
+            Optional
+                .of(this.commentService.getCommentsForPost(postId))
+                .map(CommentMapper.INSTANCE::asDtoList)
+                .get();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long addComment(@PathVariable Long postId, @RequestBody NewCommentDto newCommentDto) {
+    @ApiOperation(value = "Add new Comment", produces = "application/json")
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "Created"),
+        @ApiResponse(code = 400, message = "Bad Request")
+    })
+    public Long addComment(@PathVariable Long postId, @Valid @RequestBody NewCommentDto newCommentDto) {
         newCommentDto.setPostId(postId);
-        return this.commentService.addComment(newCommentDto);
-    }
-
-    @ExceptionHandler({ IllegalArgumentException.class })
-    public ResponseEntity<Object> handleException(Exception ex, WebRequest request) {
-        return new ResponseEntity(
-            "Error: " + ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST
-        );
+        return this
+            .commentService
+            .addComment(CommentMapper.INSTANCE.toEntity(newCommentDto));
     }
 
 }

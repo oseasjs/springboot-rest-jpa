@@ -27,10 +27,4 @@ public class Post {
 
     private LocalDateTime creationDate;
 
-    public Post(String title, String content, LocalDateTime creationDate) {
-        this.title = title;
-        this.content = content;
-        this.creationDate = creationDate;
-    }
-
 }

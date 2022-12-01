@@ -1,35 +1,26 @@
 package com.springboot.rest.api.blog.service;
 
-import com.springboot.rest.api.blog.dto.PostDto;
+import com.springboot.rest.api.blog.exception.NotFoundException;
 import com.springboot.rest.api.blog.model.Post;
 import com.springboot.rest.api.blog.repository.PostRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
+@AllArgsConstructor
 public class PostService {
 
     private PostRepository postRepository;
 
-    public PostService(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
-
-    public PostDto getPost(Long id) {
+    public Post getPost(Long id) {
         return postRepository
             .findById(id)
-            .map(post -> new PostDto(post.getTitle(), post.getContent(), post.getCreationDate()))
-            .orElse(null);
+            .orElseThrow(() -> new NotFoundException(String.format("Post not found with ID = %d", id)));
     }
 
-    public Long addPost(PostDto postDto) {
+    public Long addPost(Post post) {
         return postRepository
-            .save(
-                Optional.of(postDto)
-                    .map(dto -> new Post(postDto.getTitle(), postDto.getContent(), postDto.getCreationDate()))
-                    .get()
-            )
+            .save(post)
             .getId();
     }
 

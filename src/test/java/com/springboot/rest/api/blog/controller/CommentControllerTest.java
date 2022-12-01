@@ -1,15 +1,17 @@
 package com.springboot.rest.api.blog.controller;
 
-import com.springboot.rest.api.blog.dto.CommentDto;
-import com.springboot.rest.api.blog.dto.NewCommentDto;
-import org.junit.Test;
+import com.springboot.rest.api.blog.model.Comment;
+import com.springboot.rest.api.blog.model.Post;
+import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static com.springboot.rest.api.blog.utils.TestUtils.*;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,51 +21,86 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class CommentControllerTest extends AbstractControllerTest {
 
+    private Post postMocked = new Post(BigDecimal.ONE.longValue(), TITLE, CONTENT, now);
+    private Comment commentMocked = new Comment(BigDecimal.ONE.longValue(), CONTENT, AUTHOR, postMocked, now);
+
     @Test
-    public void shouldReturnFoundComments() throws Exception {
+    public void shouldReturnFoundCommentsSuccessfully() throws Exception {
 
-        // given
-        List<CommentDto> comments = new ArrayList<>();
-        LocalDateTime creationDate = LocalDateTime.of(2018, 5, 20, 20, 51, 16);
-        comments.add(new CommentDto(2L, "comment content", "John Smith", creationDate));
+        when(commentService.getCommentsForPost(BigDecimal.ONE.longValue())).thenReturn(List.of(commentMocked));
 
-        // when
-        when(commentService.getCommentsForPost(1L)).thenReturn(comments);
-
-        // then
-        mockMvc.perform(get("/posts/1/comments").accept(APPLICATION_JSON))
+        mockMvc.perform(get("/v1/posts/1/comments").accept(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0].id", is(2)))
-            .andExpect(jsonPath("$[0].comment", is("comment content")))
-            .andExpect(jsonPath("$[0].author", is("John Smith")))
-            .andExpect(jsonPath("$[0].creationDate", is(creationDate.toString())));
+            .andExpect(jsonPath("$[0].id", is(commentMocked.getId().intValue())))
+//            .andExpect(jsonPath("$[0].postId", is(commentMocked.getPost().getId())))
+            .andExpect(jsonPath("$[0].content", is(commentMocked.getContent())))
+            .andExpect(jsonPath("$[0].author", is(commentMocked.getAuthor())))
+            .andExpect(jsonPath("$[0].creationDate", containsString(commentMocked.getCreationDate().toString())));
 
     }
 
     @Test
-    public void shouldAddComment() throws Exception {
+    public void shouldAddCommentSuccessfully() throws Exception {
 
-        // given
-        String commentBody = "{\"content\":\"Test content\", \"author\":\"John Doe\"}";
-        NewCommentDto newComment = createComment("Test content", "John Doe");
+        when(commentService.addComment(any())).thenReturn(1L);
 
-        // when
-        when(commentService.addComment(newComment)).thenReturn(1L);
-
-        // then
-        mockMvc.perform(post("/posts/1/comments")
-                .content(commentBody)
+        mockMvc.perform(post("/v1/posts/1/comments")
+                .content(json(newCommentDtoAsMap()))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isCreated());
     }
 
-    private NewCommentDto createComment(String content, String author) {
-        NewCommentDto newComment = new NewCommentDto();
-        newComment.setContent(content);
-        newComment.setAuthor(author);
-        return newComment;
+    @Test
+    public void shouldAddCommentMissingContentSuccessfully() throws Exception {
+        Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
+        newPostDtoMap.remove("content");
+
+        mockMvc.perform(post("/v1/posts/1/comments")
+                .content(json(newPostDtoMap))
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.content", containsString(requiredMsg("Content"))));
+    }
+
+    @Test
+    public void shouldAddCommentMissingAuthorSuccessfully() throws Exception {
+        Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
+        newPostDtoMap.remove("author");
+
+        mockMvc.perform(post("/v1/posts/1/comments")
+                .content(json(newPostDtoMap))
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.author", containsString(requiredMsg("Author"))));
+    }
+
+    @Test
+    public void shouldAddCommentMissingCreationSuccessfully() throws Exception {
+        Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
+        newPostDtoMap.remove("creationDate");
+
+        mockMvc.perform(post("/v1/posts/1/comments")
+                .content(json(newPostDtoMap))
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.creationDate", containsString(requiredMsg("Creation Date"))));
+    }
+
+    @Test
+    public void shouldAddCommentMissingAllFieldsSuccessfully() throws Exception {
+        mockMvc.perform(post("/v1/posts/1/comments")
+                .content(json(new HashMap<>()))
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.content", containsString(requiredMsg("Content"))))
+            .andExpect(jsonPath("$.author", containsString(requiredMsg("Author"))))
+            .andExpect(jsonPath("$.creationDate", containsString(requiredMsg("Creation Date"))));
     }
 
 }

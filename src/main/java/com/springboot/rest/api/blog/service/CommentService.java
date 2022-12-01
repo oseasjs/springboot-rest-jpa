@@ -1,44 +1,33 @@
 package com.springboot.rest.api.blog.service;
 
-import com.springboot.rest.api.blog.dto.CommentDto;
-import com.springboot.rest.api.blog.dto.NewCommentDto;
+import com.springboot.rest.api.blog.exception.NotFoundException;
 import com.springboot.rest.api.blog.model.Comment;
-import com.springboot.rest.api.blog.model.Post;
 import com.springboot.rest.api.blog.repository.CommentRepository;
 import com.springboot.rest.api.blog.repository.PostRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class CommentService {
     private PostRepository postRepository;
     private CommentRepository commentRepository;
 
-    public CommentService(PostRepository postRepository, CommentRepository commentRepository) {
-        this.postRepository = postRepository;
-        this.commentRepository = commentRepository;
+    public List<Comment> getCommentsForPost(Long postId) {
+        return this.commentRepository.findByPostId(postId);
     }
 
-    public List<CommentDto> getCommentsForPost(Long postId) {
-        return this.commentRepository
-            .findByPostId(postId)
-            .stream()
-            .map(comment -> new CommentDto(comment.getId(), comment.getContent(), comment.getAuthor(), comment.getCreationDate()))
-            .collect(Collectors.toList());
-    }
+    public Long addComment(Comment comment) {
 
-    public Long addComment(NewCommentDto newCommentDto) {
-
-        Post post = this.postRepository
-            .findById(newCommentDto.getPostId())
-            .orElseThrow(() -> new IllegalArgumentException("Post not found with ID = " + newCommentDto.getPostId()));
+        this.postRepository
+            .findById(comment.getPost().getId())
+            .orElseThrow(() -> new NotFoundException(
+                String.format("Post not found with ID = %d", comment.getPost().getId())));
 
         return this.commentRepository
-            .save(
-                new Comment(null, newCommentDto.getContent(), newCommentDto.getAuthor(), post, newCommentDto.getCreationDate())
-            )
+            .save(comment)
             .getId();
     }
 }

@@ -1,70 +1,81 @@
 package com.springboot.rest.api.blog.service;
 
-import com.springboot.rest.api.blog.dto.CommentDto;
-import com.springboot.rest.api.blog.dto.NewCommentDto;
+import com.springboot.rest.api.blog.exception.NotFoundException;
 import com.springboot.rest.api.blog.model.Post;
 import com.springboot.rest.api.blog.repository.PostRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.math.BigDecimal;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static com.springboot.rest.api.blog.utils.TestUtils.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@RunWith(SpringRunner.class)
+
 @SpringBootTest
 public class PostServiceTest {
-
     @Autowired
     PostRepository postRepository;
 
     @Autowired
-    CommentService commentService;
+    PostService postService;
 
-    @Test
-    public void shouldAddComment() {
-        Post post = createTestPost();
+    private Post existingPost;
+    private Post postMocked = new Post(null, TITLE, CONTENT, now);
 
-        NewCommentDto comment = new NewCommentDto();
-        comment.setPostId(post.getId());
-        comment.setAuthor("Author");
-        comment.setContent("Content");
-        Long commentId = commentService.addComment(comment);
-
-        assertThat("Comment id shouldn't be null", commentId, notNullValue());
+    @BeforeEach
+    public void setup() {
+        existingPost = postRepository.save(postMocked);
     }
 
-    private Post createTestPost() {
-        Post post = new Post();
-        post.setTitle("Test title");
-        post.setContent("Test content");
-        LocalDateTime creationDate = LocalDateTime.of(2018, 5, 20, 20, 51, 16);
-        post.setCreationDate(creationDate);
-        postRepository.save(post);
-        return post;
+    @AfterEach
+    public void tearDown() {
+        postRepository
+            .findById(existingPost.getId())
+            .ifPresent(p -> postRepository.delete(p));
     }
 
     @Test
-    public void shouldReturnAddedComment() {
-        Post post = createTestPost();
+    public void shouldReturnCreatedPostSuccessfully() {
+        Post post = postService.getPost(existingPost.getId());
 
-        NewCommentDto comment = new NewCommentDto();
-        comment.setPostId(post.getId());
-        comment.setAuthor("Author");
-        comment.setContent("Content");
+        assertNotNull(post, "Post shouldn't be null");
+        assertEquals(post.getId(), existingPost.getId());
+        assertEquals(post.getContent(), existingPost.getContent());
+        assertEquals(post.getTitle(), existingPost.getTitle());
+        assertEquals(post.getCreationDate(), existingPost.getCreationDate());
+    }
 
-        commentService.addComment(comment);
+    @Test
+    public void shouldReturnExceptionForNotExistingPostSuccessfully() {
+        Exception exception = Assertions.assertThrows(Exception.class, () -> {
+            postService.getPost(BigDecimal.ZERO.subtract(BigDecimal.ONE).longValue());
+        });
 
-        List<CommentDto> comments = commentService.getCommentsForPost(post.getId());
+        Assertions.assertEquals(NotFoundException.class, exception.getClass());
+    }
 
-        assertThat("There should be one comment", comments, hasSize(1));
-        assertThat(comments.get(0).getAuthor(), equalTo("Author"));
-        assertThat(comments.get(0).getComment(), equalTo("Content"));
+    @Test
+    public void shouldReturnPostForNotExistingPostSuccessfully() {
+        Post postFound = postService.getPost(existingPost.getId());
+
+        assertNotNull(postFound, "Post shouldn't be null");
+        assertEquals(postFound.getId(), existingPost.getId());
+        assertEquals(postFound.getContent(), existingPost.getContent());
+        assertEquals(postFound.getTitle(), existingPost.getTitle());
+        assertEquals(postFound.getCreationDate(), existingPost.getCreationDate());
+
+    }
+
+    @Test
+    public void shouldCreatedPostSuccessfully() {
+        Long postId = postService.addPost(postMocked);
+        assertNotNull(postId, "Post ID shouldn't be null");
     }
 
 }
