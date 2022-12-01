@@ -23,6 +23,6 @@ Blog application to add/get Posts and Comments;
 - Map Struct;
 - H2;
 - JUnit 5;
-- Moc MVC;
+- MockMVC;
 - Sonar;
 
