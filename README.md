@@ -8,7 +8,7 @@
 
 ### Description
 
-Blog application to persist Posts and Comments related to it;  
+Blog application to add/get Posts and Comments;  
 
 ### Bootstrapped with:
 
