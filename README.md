@@ -9,6 +9,7 @@
 ### Description
 
 Blog application to add/get Posts and Comments;  
+Audit data persisted on a separate schema;
 
 ### Bootstrapped with:
 

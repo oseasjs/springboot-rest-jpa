@@ -2,6 +2,7 @@ package com.springboot.rest.api.blog.service;
 
 import com.springboot.rest.api.blog.exception.NotFoundException;
 import com.springboot.rest.api.blog.model.Comment;
+import com.springboot.rest.api.blog.model.Post;
 import com.springboot.rest.api.blog.repository.CommentRepository;
 import com.springboot.rest.api.blog.repository.PostRepository;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,9 @@ public class CommentService {
             .findById(comment.getPost().getId())
             .ifPresentOrElse(
                 comment::setPost,
-                () -> new NotFoundException(String.format("Post not found with ID = %d", comment.getPost().getId()))
+                () -> {
+                    throw new NotFoundException(String.format("Post not found with ID = %d", comment.getPost().getId()));
+                }
             );
 
         return this.commentRepository
