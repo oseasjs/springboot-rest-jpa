@@ -1,30 +1,30 @@
 package com.springboot.rest.api.blog.model;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(schema = "blog")
+@Audited
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Post {
+public class Post extends BaseAudit {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotNull
     private String title;
-
-    @Column(length = 4096)
+    @NotNull
     private String content;
-
+    @NotNull
     private LocalDateTime creationDate;
 
 }

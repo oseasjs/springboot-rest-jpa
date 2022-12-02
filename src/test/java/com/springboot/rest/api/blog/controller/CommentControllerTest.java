@@ -3,9 +3,9 @@ package com.springboot.rest.api.blog.controller;
 import com.springboot.rest.api.blog.model.Comment;
 import com.springboot.rest.api.blog.model.Post;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,14 +23,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CommentControllerTest extends AbstractControllerTest {
 
     private Post postMocked = new Post(BigDecimal.ONE.longValue(), TITLE, CONTENT, now);
-    private Comment commentMocked = new Comment(BigDecimal.ONE.longValue(), CONTENT, AUTHOR, postMocked, now);
+    private Comment commentMocked = new Comment(BigDecimal.ONE.longValue(), CONTENT, AUTHOR, now, postMocked);
 
     @Test
     public void shouldReturnFoundCommentsSuccessfully() throws Exception {
 
-        when(commentService.getCommentsForPost(BigDecimal.ONE.longValue())).thenReturn(List.of(commentMocked));
+        when(commentService.getCommentsForPost(BigDecimal.ONE.longValue(), PageRequest.of(0, 5))).thenReturn(List.of(commentMocked));
 
-        mockMvc.perform(get("/v1/posts/1/comments").accept(APPLICATION_JSON))
+        mockMvc.perform(get("/v1/posts/1/comments?page=0&pageSize=5").accept(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[0].id", is(commentMocked.getId().intValue())))
@@ -44,7 +44,7 @@ public class CommentControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddCommentSuccessfully() throws Exception {
 
-        when(commentService.addComment(any())).thenReturn(1L);
+        when(commentService.addComment(any())).thenReturn(BigDecimal.ONE.longValue());
 
         mockMvc.perform(post("/v1/posts/1/comments")
                 .content(json(newCommentDtoAsMap()))

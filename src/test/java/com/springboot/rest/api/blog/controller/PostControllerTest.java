@@ -39,7 +39,7 @@ public class PostControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddPostSuccessfully() throws Exception {
 
-        when(postService.addPost(any())).thenReturn(1L);
+        when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
 
         mockMvc.perform(post("/v1/posts")
                 .content(json(newPostDtoAsMap()))
@@ -52,7 +52,7 @@ public class PostControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddPostMissingTitleSuccessfully() throws Exception {
 
-        when(postService.addPost(any())).thenReturn(1L);
+        when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
 
         Map<String, Object> newPostDtoMap = newPostDtoAsMap();
         newPostDtoMap.remove("title");
@@ -68,7 +68,7 @@ public class PostControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddPostMissingContentSuccessfully() throws Exception {
 
-        when(postService.addPost(any())).thenReturn(1L);
+        when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
 
         Map<String, Object> newPostDtoMap = newPostDtoAsMap();
         newPostDtoMap.remove("content");
@@ -84,7 +84,7 @@ public class PostControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddPostMissingCreationDateSuccessfully() throws Exception {
 
-        when(postService.addPost(any())).thenReturn(1L);
+        when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
 
         Map<String, Object> newPostDtoMap = newPostDtoAsMap();
         newPostDtoMap.remove("creationDate");
@@ -100,7 +100,7 @@ public class PostControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddPostMissingAllFieldDateSuccessfully() throws Exception {
 
-        when(postService.addPost(any())).thenReturn(1L);
+        when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
 
         Map<String, Object> newPostDtoMap = new HashMap<>();
 

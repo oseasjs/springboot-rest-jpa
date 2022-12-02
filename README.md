@@ -17,12 +17,13 @@ Blog application to add/get Posts and Comments;
 - Spring Web;
 - Spring Data;
 - Spring Validation;
+- Hibernate Envers;
 - Global Exception Handler;
 - Swagger;
 - Lombok;
 - Map Struct;
+- Flyway;
 - H2;
 - JUnit 5;
 - MockMVC;
 - Sonar;
-

@@ -15,14 +15,14 @@ import java.util.Map;
 class GlobalDefaultExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
-    public ResponseEntity defaultErrorHandler(Exception e) throws Exception {
+    public ResponseEntity defaultErrorHandler(Exception e){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(e.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity handlerNotFoundExceptions(NotFoundException e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(e.getMessage());
     }
 

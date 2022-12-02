@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,10 +32,12 @@ public class CommentController {
         @ApiResponse(code = 200, message = "Ok"),
         @ApiResponse(code = 400, message = "Bad Request")
     })
-    public List<CommentDto> getCommentsForPost(@PathVariable Long postId) {
+    public List<CommentDto> getCommentsForPost(@PathVariable Long postId,
+                                               @RequestParam(defaultValue = "5", required = false) Integer pageSize,
+                                               @RequestParam(defaultValue = "1", required = false) Integer page) {
         return
             Optional
-                .of(this.commentService.getCommentsForPost(postId))
+                .of(this.commentService.getCommentsForPost(postId, PageRequest.of(page, pageSize)))
                 .map(CommentMapper.INSTANCE::asDtoList)
                 .get();
     }

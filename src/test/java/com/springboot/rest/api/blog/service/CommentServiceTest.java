@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,9 +33,9 @@ public class CommentServiceTest {
     CommentService commentService;
 
     private Post existingPost;
-    private Post postMocked = new Post(null, TITLE, CONTENT, now);
+    private final Post postMocked = new Post(null, TITLE, CONTENT, now);
 
-    private Comment commentMocked = new Comment(null, CONTENT, AUTHOR, postMocked, now);
+    private Comment commentMocked = new Comment(null, CONTENT, AUTHOR, now, postMocked);
 
     @BeforeEach
     public void setup() {
@@ -44,7 +45,7 @@ public class CommentServiceTest {
     @AfterEach
     public void tearDown() {
         commentRepository
-            .findByPostId(existingPost.getId())
+            .findByPostId(existingPost.getId(), PageRequest.of(0, 5))
             .forEach(comment -> commentRepository.delete(comment));
 
         postRepository
@@ -75,7 +76,7 @@ public class CommentServiceTest {
         NEW_COMMENT_MOCKED.setPostId(existingPost.getId());
         commentService.addComment(commentMocked);
 
-        List<Comment> comments = commentService.getCommentsForPost(existingPost.getId());
+        List<Comment> comments = commentService.getCommentsForPost(existingPost.getId(), PageRequest.of(0, 5));
 
         assertThat("There should be one comment", comments, hasSize(1));
         assertThat(comments.get(0).getAuthor(), equalTo(COMMENT_MOCKED.getAuthor()));
@@ -86,7 +87,7 @@ public class CommentServiceTest {
 
     @Test
     public void shouldReturnEmptyArrayCommentsSuccessfully() {
-        List<Comment> comments = commentService.getCommentsForPost(existingPost.getId());
+        List<Comment> comments = commentService.getCommentsForPost(existingPost.getId(), PageRequest.of(0, 5));
         assertThat("There should not have comments related to the postId", comments, hasSize(0));
     }
 

@@ -21,7 +21,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class PostController {
     private PostService postService;
-
     @ApiOperation(value = "Get Post by ID", produces = "application/json")
     @ApiResponses({
         @ApiResponse(code = 200, message = "Ok"),
