@@ -2,14 +2,14 @@
 
 ### Build Branches Status
 
-| Branch        |                                          Build                                           |                                                                                                                                                   Coverage |
-| ------------- |:----------------------------------------------------------------------------------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| Main          | ![CI](https://github.com/oseasjs/springboot-rest-jpa/workflows/CI/badge.svg?branch=main) | [![codecov](https://codecov.io/gh/oseasjs/springboot-rest-jpa/branch/main/graph/badge.svg)](https://codecov.io/gh/oseasjs/springboot-rest-jpa/branch/main) |
+| Branch |                                          Build                                           |                                                                                                                                                   Coverage |
+|--------|:----------------------------------------------------------------------------------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| main   | ![CI](https://github.com/oseasjs/springboot-rest-jpa/workflows/CI/badge.svg?branch=main) | [![codecov](https://codecov.io/gh/oseasjs/springboot-rest-jpa/branch/main/graph/badge.svg)](https://codecov.io/gh/oseasjs/springboot-rest-jpa/branch/main) |
 
 ### Description
 
 Blog application to add/get Posts and Comments;  
-Audit data persisted on a separate schema;
+Audit data persisted on a separate database schema;
 
 ### Bootstrapped with:
 
@@ -28,3 +28,4 @@ Audit data persisted on a separate schema;
 - JUnit 5;
 - MockMVC;
 - Sonar;
+- Github Action (CI);
