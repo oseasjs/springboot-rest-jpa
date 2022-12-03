@@ -32,3 +32,4 @@ Blog application to add/get Posts and Comments;
 - Sonar;
 - Docker;
 - Github Action (CI);
+- CodeCov;
