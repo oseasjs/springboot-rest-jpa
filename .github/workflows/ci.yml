@@ -8,8 +8,8 @@ on:
 
 jobs:
   build:
-#    runs-on: ubuntu-latest
-    runs-on: osx-arm64
+    runs-on: ubuntu-latest
+#    runs-on: osx-arm64
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 11
