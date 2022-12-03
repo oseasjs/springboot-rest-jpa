@@ -28,4 +28,5 @@ Audit data persisted on a separate database schema;
 - JUnit 5;
 - MockMVC;
 - Sonar;
+- Docker;
 - Github Action (CI);
