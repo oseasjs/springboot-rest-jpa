@@ -28,3 +28,7 @@ spring:
             default_schema: audit
   flyway:
     default-schema: blog
+#springdoc:
+#  version: '@springdoc.version@'
+#  swagger-ui:
+#    use-root-path: true
