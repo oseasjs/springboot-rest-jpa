@@ -4,10 +4,11 @@ import com.springboot.rest.api.blog.controller.dto.NewPostDto;
 import com.springboot.rest.api.blog.controller.dto.PostDto;
 import com.springboot.rest.api.blog.controller.mapper.PostMapper;
 import com.springboot.rest.api.blog.service.PostService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,15 +18,17 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/posts")
-@Api(value = "Post API for the Blog")
+@Tag(name = "Post API for the Blog")
 @AllArgsConstructor
 public class PostController {
     private PostService postService;
-    @ApiOperation(value = "Get Post by ID", produces = "application/json")
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "Ok"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 404, message = "Not Found")
+
+    @Operation(summary = "Get Post by ID", responses = {
+        @ApiResponse(responseCode = "200",
+            description = "Ok",
+            content = @Content(mediaType = "application/json",schema = @Schema(implementation = PostDto.class))
+        ),
+        @ApiResponse(responseCode = "400", description = "Bad Request")
     })
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -36,10 +39,11 @@ public class PostController {
             .get();
     }
 
-    @ApiOperation(value = "Add new Post", produces = "application/json")
-    @ApiResponses({
-        @ApiResponse(code = 201, message = "Created"),
-        @ApiResponse(code = 400, message = "Bad Request")
+    @Operation(summary = "Add new Post", responses = {
+        @ApiResponse(responseCode = "201",
+            description = "Ok",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
+        @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

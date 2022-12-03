@@ -2,11 +2,13 @@ name: CI
 
 on:
   push:
-    branches: main
+    branches:
+      - main
     paths-ignore:
       - '**/*.md'
   pull_request:
-    branches: main
+    branches:
+      - main
 
 jobs:
   build:
@@ -30,4 +32,5 @@ jobs:
       - name: Upload coverage to CodeCov
         run: bash <(curl -s https://codecov.io/bash)
       - name: Build Docker Image
+        if: ${{ contains(github.ref, 'main') }}
         run: docker build -t springboot-rest-jpa:latest .
