@@ -83,7 +83,7 @@ public abstract class TestUtils {
     }
 
     public static String formatDate(LocalDateTime date) {
-        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"));
+        return date.format(DateTimeFormatter.ISO_DATE_TIME);
     }
 
 }
