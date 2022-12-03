@@ -32,5 +32,5 @@ jobs:
       - name: Upload coverage to CodeCov
         run: bash <(curl -s https://codecov.io/bash)
       - name: Build Docker Image
-        if: ${(contains(github.ref, 'main')}
+        if: ${{ contains(github.ref, 'main') }}
         run: docker build -t springboot-rest-jpa:latest .
