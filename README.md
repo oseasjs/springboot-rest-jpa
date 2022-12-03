@@ -19,6 +19,7 @@ Audit data persisted on audit schema;
 - Spring Web;
 - Spring Data;
 - Spring Validation;
+- Spring Actuator;
 - SpringDoc OpenAPI 3;
 - Hibernate Envers;
 - Global Exception Handler;
