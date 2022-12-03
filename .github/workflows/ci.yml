@@ -27,3 +27,5 @@ jobs:
         run: mvn -B package --file pom.xml
       - name: Upload coverage to CodeCov
         run: bash <(curl -s https://codecov.io/bash)
+      - name: Build Docker Image
+        run: docker build -t springboot-rest-jpa:latest .

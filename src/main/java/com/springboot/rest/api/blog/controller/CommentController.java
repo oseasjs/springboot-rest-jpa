@@ -34,7 +34,7 @@ public class CommentController {
     })
     public List<CommentDto> getCommentsForPost(@PathVariable Long postId,
                                                @RequestParam(defaultValue = "5", required = false) Integer pageSize,
-                                               @RequestParam(defaultValue = "1", required = false) Integer page) {
+                                               @RequestParam(defaultValue = "0", required = false) Integer page) {
         return
             Optional
                 .of(this.commentService.getCommentsForPost(postId, PageRequest.of(page, pageSize)))
