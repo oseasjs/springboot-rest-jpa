@@ -127,7 +127,7 @@
                     <excludes>
                         <exclude>com/springboot/rest/api/blog/BlogApplication.*</exclude>
                         <exclude>com/springboot/rest/api/blog/model/*</exclude>
-                        <exclude>com/springboot/rest/api/blog/config/*</exclude>
+                        <exclude>com/springboot/rest/api/blog/configuration/*</exclude>
                         <exclude>com/springboot/rest/api/blog/controller/mapper/*Impl.*</exclude>
                         <exclude>com/springboot/rest/api/blog/controller/dto/*Builder.*</exclude>
                     </excludes>
