@@ -24,4 +24,8 @@ public class PostService {
             .getId();
     }
 
+    public boolean existsByTitle(String title) {
+        return postRepository.existsByTitle(title);
+    }
+
 }

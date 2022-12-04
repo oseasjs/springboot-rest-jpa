@@ -2,7 +2,6 @@ package com.springboot.rest.api.blog.service;
 
 import com.springboot.rest.api.blog.exception.NotFoundException;
 import com.springboot.rest.api.blog.model.Comment;
-import com.springboot.rest.api.blog.model.Post;
 import com.springboot.rest.api.blog.repository.CommentRepository;
 import com.springboot.rest.api.blog.repository.PostRepository;
 import lombok.AllArgsConstructor;
@@ -19,6 +18,10 @@ public class CommentService {
 
     public List<Comment> getCommentsForPost(Long postId, Pageable pageable) {
         return this.commentRepository.findByPostId(postId, pageable);
+    }
+
+    public boolean existsByPostIdAndAuthor(Long postId, String author) {
+        return this.commentRepository.existsByPostIdAndAuthor(postId, author);
     }
 
     public Long addComment(Comment comment) {

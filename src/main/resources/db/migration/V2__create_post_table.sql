@@ -3,6 +3,7 @@ create table blog.post (
     title varchar(255) not null,
     content varchar(255) not null,
     creation_date timestamp not null,
+    generated_type VARCHAR(255) not null,
     created_by varchar(255) not null,
     created_date timestamp not null,
     last_modified_by varchar(255) not null,
@@ -11,6 +12,8 @@ create table blog.post (
     primary key (id)
 );
 
+create unique index blog.post_index on blog.post (title, content);
+
 create table audit.post_aud (
     id int8 not null,
     rev int4 not null,
@@ -18,6 +21,7 @@ create table audit.post_aud (
     title varchar(255),
     content varchar(255),
     creation_date timestamp,
+    generated_type VARCHAR(255),
     created_by varchar(255),
     created_date timestamp,
     last_modified_by varchar(255),
