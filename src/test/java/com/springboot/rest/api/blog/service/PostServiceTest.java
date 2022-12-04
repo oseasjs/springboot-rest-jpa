@@ -1,5 +1,6 @@
 package com.springboot.rest.api.blog.service;
 
+import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
 import com.springboot.rest.api.blog.exception.NotFoundException;
 import com.springboot.rest.api.blog.model.Post;
 import com.springboot.rest.api.blog.repository.PostRepository;
@@ -19,35 +20,35 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class PostServiceTest {
-    @Autowired
-    PostRepository postRepository;
+  @Autowired
+  PostRepository postRepository;
 
-    @Autowired
-    PostService postService;
+  @Autowired
+  PostService postService;
 
-    private Post existingPost;
-    private Post postMocked = new Post(null, TITLE, CONTENT, now);
+  private Post existingPost;
+  private Post postMocked = new Post(null, TITLE, CONTENT, now, GeneratedTypeEnum.MANUAL);
 
-    @BeforeEach
-    public void setup() {
-        existingPost = postRepository.save(postMocked);
-    }
+  @BeforeEach
+  public void setup() {
+    existingPost = postRepository.save(postMocked);
+  }
 
-    @AfterEach
-    public void tearDown() {
-        postRepository
-            .findById(existingPost.getId())
-            .ifPresent(p -> postRepository.delete(p));
-    }
+  @AfterEach
+  public void tearDown() {
+    postRepository
+      .findAll()
+      .forEach(p -> postRepository.delete(p));
+  }
 
-    @Test
-    public void shouldReturnCreatedPostSuccessfully() {
-        Post post = postService.getPost(existingPost.getId());
+  @Test
+  public void shouldReturnCreatedPostSuccessfully() {
+    Post post = postService.getPost(existingPost.getId());
 
-        assertNotNull(post, "Post shouldn't be null");
-        assertEquals(post.getId(), existingPost.getId());
-        assertEquals(post.getContent(), existingPost.getContent());
-        assertEquals(post.getTitle(), existingPost.getTitle());
+    assertNotNull(post, "Post shouldn't be null");
+    assertEquals(post.getId(), existingPost.getId());
+    assertEquals(post.getContent(), existingPost.getContent());
+    assertEquals(post.getTitle(), existingPost.getTitle());
         assertEquals(post.getCreationDate(), existingPost.getCreationDate());
     }
 

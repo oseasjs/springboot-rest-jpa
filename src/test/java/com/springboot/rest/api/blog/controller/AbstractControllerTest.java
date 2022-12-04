@@ -1,5 +1,7 @@
 package com.springboot.rest.api.blog.controller;
 
+import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderClient;
+import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderService;
 import com.springboot.rest.api.blog.service.CommentService;
 import com.springboot.rest.api.blog.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,18 +17,24 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest
 public abstract class AbstractControllerTest {
 
-    @Autowired
-    protected MockMvc mockMvc;
+  @Autowired
+  protected MockMvc mockMvc;
 
-    @MockBean
-    protected PostService postService;
+  @MockBean
+  protected PostService postService;
 
-    @MockBean
-    protected CommentService commentService;
+  @MockBean
+  protected CommentService commentService;
 
-    @BeforeEach
-    public void setUp() {
-        Mockito.reset(postService, commentService);
-    }
+  @MockBean
+  protected JsonPlaceHolderClient jsonPlaceHolderClient;
+
+  @MockBean
+  protected JsonPlaceHolderService jsonPlaceHolderService;
+
+  @BeforeEach
+  public void setUp() {
+    Mockito.reset(postService, commentService);
+  }
 
 }

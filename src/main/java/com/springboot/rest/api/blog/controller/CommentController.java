@@ -4,7 +4,7 @@ import com.springboot.rest.api.blog.controller.dto.CommentDto;
 import com.springboot.rest.api.blog.controller.dto.NewCommentDto;
 import com.springboot.rest.api.blog.controller.dto.RemoteCommentDto;
 import com.springboot.rest.api.blog.controller.mapper.CommentMapper;
-import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderClient;
+import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderService;
 import com.springboot.rest.api.blog.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,7 +27,7 @@ import java.util.Optional;
 public class CommentController {
 
     private CommentService commentService;
-    private JsonPlaceHolderClient jsonPlaceHolderClient;
+    private JsonPlaceHolderService jsonPlaceHolderService;
 
     @Operation(summary = "Get All Comments from a Post", responses = {
         @ApiResponse(responseCode = "200",
@@ -75,13 +75,7 @@ public class CommentController {
     @ResponseStatus(HttpStatus.CREATED)
     public void addRemoteComments(@PathVariable Long postId, @Valid @RequestBody RemoteCommentDto remoteCommentDto) {
         log.info("Adding {} comments with postId {} from jplaceholder", remoteCommentDto.getLimit(), postId);
-        jsonPlaceHolderClient
-            .getComments(postId)
-            .stream()
-            .filter(c -> !commentService.existsByPostIdAndAuthor(c.getPostId(), c.getAuthor()))
-            .limit(remoteCommentDto.getLimit())
-            .map(CommentMapper.INSTANCE::toEntity)
-            .forEach(commentService::addComment);
+        jsonPlaceHolderService.addRemoteComments(postId, remoteCommentDto);
     }
 
 }

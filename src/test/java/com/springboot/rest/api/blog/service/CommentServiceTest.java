@@ -1,5 +1,6 @@
 package com.springboot.rest.api.blog.service;
 
+import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
 import com.springboot.rest.api.blog.exception.NotFoundException;
 import com.springboot.rest.api.blog.model.Comment;
 import com.springboot.rest.api.blog.model.Post;
@@ -20,37 +21,33 @@ import static com.springboot.rest.api.blog.utils.TestUtils.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-@SpringBootTest()
+@SpringBootTest
 public class CommentServiceTest {
 
-    @Autowired
-    PostRepository postRepository;
+  private final Post postMocked = new Post(null, TITLE, CONTENT, now, GeneratedTypeEnum.MANUAL);
+  @Autowired
+  PostRepository postRepository;
+  @Autowired
+  CommentRepository commentRepository;
+  @Autowired
+  CommentService commentService;
+  private Post existingPost;
+  private Comment commentMocked = new Comment(null, CONTENT, AUTHOR, now, GeneratedTypeEnum.MANUAL, postMocked);
 
-    @Autowired
-    CommentRepository commentRepository;
+  @BeforeEach
+  public void setup() {
+    existingPost = postRepository.save(postMocked);
+  }
 
-    @Autowired
-    CommentService commentService;
-
-    private Post existingPost;
-    private final Post postMocked = new Post(null, TITLE, CONTENT, now);
-
-    private Comment commentMocked = new Comment(null, CONTENT, AUTHOR, now, postMocked);
-
-    @BeforeEach
-    public void setup() {
-        existingPost = postRepository.save(postMocked);
-    }
-
-    @AfterEach
-    public void tearDown() {
-        commentRepository
-            .findByPostId(existingPost.getId(), PageRequest.of(0, 5))
+  @AfterEach
+  public void tearDown() {
+    commentRepository
+      .findAll()
             .forEach(comment -> commentRepository.delete(comment));
 
-        postRepository
-            .findById(existingPost.getId())
-                .ifPresent(p -> postRepository.delete(p));
+    postRepository
+      .findAll()
+      .forEach(p -> postRepository.delete(p));
     }
 
     @Test

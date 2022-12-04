@@ -4,7 +4,7 @@ import com.springboot.rest.api.blog.controller.dto.NewPostDto;
 import com.springboot.rest.api.blog.controller.dto.PostDto;
 import com.springboot.rest.api.blog.controller.dto.RemotePostDto;
 import com.springboot.rest.api.blog.controller.mapper.PostMapper;
-import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderClient;
+import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderService;
 import com.springboot.rest.api.blog.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,28 +25,28 @@ import java.util.Optional;
 @AllArgsConstructor
 @Slf4j
 public class PostController {
-    private PostService postService;
-    private JsonPlaceHolderClient jsonPlaceHolderClient;
+  private PostService postService;
+  private JsonPlaceHolderService jsonPlaceHolderService;
 
-    @Operation(summary = "Get Post by ID", responses = {
-        @ApiResponse(responseCode = "200",
-            description = "Ok",
-            content = @Content(mediaType = "application/json",schema = @Schema(implementation = PostDto.class))
-        ),
-        @ApiResponse(responseCode = "400", description = "Bad Request")
-    })
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public PostDto getPost(@PathVariable Long id) {
-        log.info("Getting post with id {}", id);
-        return Optional
-            .of(this.postService.getPost(id))
-            .map(PostMapper.INSTANCE::toDTO)
-            .get();
-    }
+  @Operation(summary = "Get Post by ID", responses = {
+    @ApiResponse(responseCode = "200",
+      description = "Ok",
+      content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class))
+    ),
+    @ApiResponse(responseCode = "400", description = "Bad Request")
+  })
+  @GetMapping("/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public PostDto getPost(@PathVariable Long id) {
+    log.info("Getting post with id {}", id);
+    return Optional
+      .of(this.postService.getPost(id))
+      .map(PostMapper.INSTANCE::toDTO)
+      .get();
+  }
 
-    @Operation(summary = "Add new Post", responses = {
-        @ApiResponse(responseCode = "201",
+  @Operation(summary = "Add new Post", responses = {
+    @ApiResponse(responseCode = "201",
             description = "Ok",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
         @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)
@@ -67,14 +67,8 @@ public class PostController {
     @PostMapping("/remotes")
     @ResponseStatus(HttpStatus.CREATED)
     public void addRemotePosts(@Valid @RequestBody RemotePostDto remotePostDto) {
-        log.info("Adding {} posts from jplaceholder", remotePostDto.getLimit());
-        jsonPlaceHolderClient
-            .getPosts()
-            .stream()
-            .filter(p -> !postService.existsByTitle(p.getTitle()))
-            .limit(remotePostDto.getLimit())
-            .map(PostMapper.INSTANCE::toEntity)
-            .forEach(postService::addPost);
+      log.info("Adding {} posts from jplaceholder", remotePostDto.getLimit());
+      jsonPlaceHolderService.addRemotePosts(remotePostDto);
     }
 
 }

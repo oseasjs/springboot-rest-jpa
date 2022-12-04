@@ -6,12 +6,15 @@ create table blog.comment (
     post_id bigint not null,
     created_by varchar(255) not null,
     created_date timestamp not null,
+    generated_type VARCHAR(255) not null,
     last_modified_by varchar(255) not null,
     last_modified_date timestamp not null,
     version bigint not null,
     primary key (id),
     foreign key (post_id) references post(id)
 );
+
+create unique index blog.comment_index on blog.comment (author, content, post_id);
 
 create table audit.comment_aud (
     id int8 not null,
@@ -20,6 +23,7 @@ create table audit.comment_aud (
     content varchar(255),
     author varchar(255),
     creation_date timestamp,
+    generated_type VARCHAR(255),
     post_id bigint,
     created_by varchar(255),
     created_date timestamp,
