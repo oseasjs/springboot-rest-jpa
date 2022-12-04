@@ -20,6 +20,7 @@ Blog application to add/get Posts and Comments;
 - Spring Data;
 - Spring Validation;
 - Spring Actuator;
+- Spring OpenFeign
 - SpringDoc OpenAPI 3;
 - Hibernate Envers;
 - Global Exception Handler;
@@ -33,3 +34,14 @@ Blog application to add/get Posts and Comments;
 - Docker;
 - Github Action (CI);
 - CodeCov;
+
+### TODO
+- Spring Security JWT
+- ActiveMQ
+
+### Technics
+-  Embedded Active MQ (to create a comment an a post from random user)
+- https://memorynotfound.com/spring-boot-embedded-activemq-configuration-example/
+
+- OpenFeign (to get user from random user and send to the queue)
+- https://www.baeldung.com/spring-cloud-openfeign

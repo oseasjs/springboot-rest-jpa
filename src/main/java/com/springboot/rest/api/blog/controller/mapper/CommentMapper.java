@@ -2,6 +2,7 @@ package com.springboot.rest.api.blog.controller.mapper;
 
 import com.springboot.rest.api.blog.controller.dto.CommentDto;
 import com.springboot.rest.api.blog.controller.dto.NewCommentDto;
+import com.springboot.rest.api.blog.feign.client.dto.JsonPlaceHolderCommentDto;
 import com.springboot.rest.api.blog.model.Comment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,6 +18,9 @@ public interface CommentMapper {
 
     @Mapping(source="postId", target="post.id")
     Comment toEntity(NewCommentDto source);
+
+    @Mapping(source="postId", target="post.id")
+    Comment toEntity(JsonPlaceHolderCommentDto source);
 
     @Mapping(source="post.id", target="postId")
     CommentDto toDTO(Comment source);
