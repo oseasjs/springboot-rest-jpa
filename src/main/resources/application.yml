@@ -29,5 +29,14 @@ spring:
   flyway:
     default-schema: blog
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    restart:
+      enabled: true
+
 jplaceholder:
   url: https://jsonplaceholder.typicode.com
