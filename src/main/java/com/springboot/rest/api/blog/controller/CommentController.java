@@ -74,7 +74,7 @@ public class CommentController {
     @PostMapping("/remotes")
     @ResponseStatus(HttpStatus.CREATED)
     public void addRemoteComments(@PathVariable Long postId, @Valid @RequestBody RemoteCommentDto remoteCommentDto) {
-        log.info("Adding {} comments with postId {} from jplaceholder", remoteCommentDto.getLimit(), postId);
+        log.info("Adding {} comments with postId {} from Json Place Holder", remoteCommentDto.getLimit(), postId);
         jsonPlaceHolderService.addRemoteComments(postId, remoteCommentDto);
     }
 

@@ -21,6 +21,7 @@ Blog application to add/get Posts and Comments;
 - Spring Validation;
 - Spring Actuator;
 - Spring OpenFeign
+- Spring Sleuth;
 - SpringDoc OpenAPI 3;
 - Hibernate Envers;
 - Global Exception Handler;
@@ -41,10 +42,3 @@ Blog application to add/get Posts and Comments;
 - ActiveMQ
 - Spring Security JWT
 
-### Technics
-
-- Embedded Active MQ (to create a comment an a post from random user)
-- https://memorynotfound.com/spring-boot-embedded-activemq-configuration-example/
-
-- Resilient$J
-- https://github.com/eugenp/tutorials/tree/master/spring-boot-modules/spring-boot-libraries-2

@@ -19,7 +19,7 @@ public class JsonPlaceHolderService {
     private CommentService commentService;
 
     public void addRemotePosts(RemotePostDto remotePostDto) {
-        log.info("Getting {} posts from jplaceholder", remotePostDto.getLimit());
+        log.info("Getting {} posts from Json Place Holder", remotePostDto.getLimit());
         jsonPlaceHolderClient
           .getPosts()
           .stream()
@@ -27,10 +27,11 @@ public class JsonPlaceHolderService {
           .limit(remotePostDto.getLimit())
           .map(PostMapper.INSTANCE::toEntity)
           .forEach(postService::addPost);
+        log.info("{} Posts saved from Json Place Holder", remotePostDto.getLimit());
     }
 
     public void addRemoteComments(Long postId, RemoteCommentDto remoteCommentDto) {
-        log.info("Getting {} comments from jplaceholder", remoteCommentDto.getLimit());
+        log.info("Getting {} comments from Json Place Holder", remoteCommentDto.getLimit());
         jsonPlaceHolderClient
           .getComments(postId)
           .stream()
@@ -38,5 +39,6 @@ public class JsonPlaceHolderService {
           .limit(remoteCommentDto.getLimit())
           .map(CommentMapper.INSTANCE::toEntity)
           .forEach(commentService::addComment);
+        log.info("{} Comments saved from Json Place Holder", remoteCommentDto.getLimit());
     }
 }
