@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
-@FeignClient(value = "jplaceholder", url = "https://jsonplaceholder.typicode.com")
+@FeignClient(value = "jplaceholder", url = "${jplaceholder.url}")
 public interface JsonPlaceHolderClient {
 
     Logger LOGGER =  LoggerFactory.getLogger(JsonPlaceHolderClient.class);
@@ -21,6 +21,6 @@ public interface JsonPlaceHolderClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/posts/{postId}/comments")
     public List<JsonPlaceHolderCommentDto> getComments(
-        @PathVariable("postId") Long postId);
+      @PathVariable("postId") Long postId);
 
 }

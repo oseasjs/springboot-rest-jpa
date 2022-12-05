@@ -67,7 +67,7 @@ public class PostController {
     @PostMapping("/remotes")
     @ResponseStatus(HttpStatus.CREATED)
     public void addRemotePosts(@Valid @RequestBody RemotePostDto remotePostDto) {
-      log.info("Adding {} posts from jplaceholder", remotePostDto.getLimit());
+      log.info("Adding {} posts from Json Place Holder", remotePostDto.getLimit());
       jsonPlaceHolderService.addRemotePosts(remotePostDto);
     }
 
