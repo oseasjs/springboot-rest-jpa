@@ -47,13 +47,19 @@ public class CommentControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddCommentSuccessfully() throws Exception {
 
-        when(commentService.addComment(any())).thenReturn(BigDecimal.ONE.longValue());
+        when(commentService.addComment(any())).thenReturn(commentMocked);
 
         mockMvc.perform(post("/v1/posts/1/comments")
-                .content(json(newCommentDtoAsMap()))
+            .content(jsonUtil.mapToJson(newCommentDtoAsMap()))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id", is(commentMocked.getId().intValue())))
+            .andExpect(jsonPath("$.postId", is(commentMocked.getPost().getId().intValue())))
+            .andExpect(jsonPath("$.content", is(commentMocked.getContent())))
+            .andExpect(jsonPath("$.author", is(commentMocked.getAuthor())))
+            .andExpect(jsonPath("$.creationDate", is(formatDate(commentMocked.getCreationDate()))))
+            .andExpect(jsonPath("$.generatedType", is(commentMocked.getGeneratedType().toString())));;
     }
 
     @Test
@@ -62,11 +68,11 @@ public class CommentControllerTest extends AbstractControllerTest {
         newPostDtoMap.remove("content");
 
         mockMvc.perform(post("/v1/posts/1/comments")
-                .content(json(newPostDtoMap))
+            .content(jsonUtil.mapToJson(newPostDtoMap))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.content", containsString(requiredMsg("Content"))));
+            .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))));
     }
 
     @Test
@@ -75,11 +81,11 @@ public class CommentControllerTest extends AbstractControllerTest {
         newPostDtoMap.remove("author");
 
         mockMvc.perform(post("/v1/posts/1/comments")
-                .content(json(newPostDtoMap))
+            .content(jsonUtil.mapToJson(newPostDtoMap))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.author", containsString(requiredMsg("Author"))));
+            .andExpect(jsonPath("$.validationMessage.author", containsString(requiredMsg("Author"))));
     }
 
     @Test
@@ -88,23 +94,23 @@ public class CommentControllerTest extends AbstractControllerTest {
         newPostDtoMap.remove("creationDate");
 
         mockMvc.perform(post("/v1/posts/1/comments")
-                .content(json(newPostDtoMap))
+            .content(jsonUtil.mapToJson(newPostDtoMap))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.creationDate", containsString(requiredMsg("Creation Date"))));
+            .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
     }
 
     @Test
     public void shouldAddCommentMissingAllFieldsSuccessfully() throws Exception {
       mockMvc.perform(post("/v1/posts/1/comments")
-          .content(json(new HashMap<>()))
+          .content(jsonUtil.mapToJson(new HashMap<>()))
           .contentType(APPLICATION_JSON)
           .accept(APPLICATION_JSON))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.content", containsString(requiredMsg("Content"))))
-        .andExpect(jsonPath("$.author", containsString(requiredMsg("Author"))))
-        .andExpect(jsonPath("$.creationDate", containsString(requiredMsg("Creation Date"))));
+        .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))))
+        .andExpect(jsonPath("$.validationMessage.author", containsString(requiredMsg("Author"))))
+        .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
     }
 
   @Test
@@ -113,18 +119,18 @@ public class CommentControllerTest extends AbstractControllerTest {
       .thenReturn(
         List.of(
           JsonPlaceHolderCommentDto.builder()
-            .author(NEW_COMMENT_MOCKED.getAuthor())
-            .content(NEW_COMMENT_MOCKED.getContent())
-            .creationDate(NEW_POST_MOCKED.getCreationDate())
+            .author(AUTHOR)
+            .content(CONTENT)
+            .creationDate(now)
             .postId(BigDecimal.ONE.longValue())
             .build()
         )
       );
 
-    when(commentService.addComment(any())).thenReturn(BigDecimal.ONE.longValue());
+    when(commentService.addComment(any())).thenReturn(commentMocked);
 
     mockMvc.perform(post("/v1/posts/1/comments/remotes")
-        .content(json(newRemoteCommentDtoAsMap()))
+        .content(jsonUtil.mapToJson(newRemoteCommentDtoAsMap()))
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON))
       .andExpect(status().isCreated());
@@ -133,7 +139,7 @@ public class CommentControllerTest extends AbstractControllerTest {
   @Test
   public void shouldAddRemoteCommentsMissingLimitSuccessfully() throws Exception {
     mockMvc.perform(post("/v1/posts/1/comments/remotes")
-        .content(json(new HashMap()))
+        .content(jsonUtil.mapToJson(new HashMap()))
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON))
       .andExpect(status().isBadRequest());

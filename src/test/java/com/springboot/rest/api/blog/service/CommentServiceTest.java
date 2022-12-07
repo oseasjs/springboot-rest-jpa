@@ -1,7 +1,7 @@
 package com.springboot.rest.api.blog.service;
 
 import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
-import com.springboot.rest.api.blog.exception.NotFoundException;
+import com.springboot.rest.api.blog.exception.BlogBusinessException;
 import com.springboot.rest.api.blog.model.Comment;
 import com.springboot.rest.api.blog.model.Post;
 import com.springboot.rest.api.blog.repository.CommentRepository;
@@ -57,28 +57,26 @@ public class CommentServiceTest {
             commentService.addComment(commentMocked);
         });
 
-        Assertions.assertEquals(NotFoundException.class, exception.getClass());
+      Assertions.assertEquals(BlogBusinessException.class, exception.getClass());
     }
 
     @Test
     public void shouldAddCommentSuccessfully() {
-        NEW_COMMENT_MOCKED.setPostId(existingPost.getId());
-        Long commentId = commentService.addComment(commentMocked);
+        Long commentId = commentService.addComment(commentMocked).getId();
 
         assertThat("Comment id shouldn't be null", commentId, notNullValue());
     }
 
     @Test
     public void shouldReturnAddedCommentSuccessfully() {
-        NEW_COMMENT_MOCKED.setPostId(existingPost.getId());
         commentService.addComment(commentMocked);
 
         List<Comment> comments = commentService.getCommentsForPost(existingPost.getId(), PageRequest.of(0, 5));
 
         assertThat("There should be one comment", comments, hasSize(1));
-        assertThat(comments.get(0).getAuthor(), equalTo(COMMENT_MOCKED.getAuthor()));
-        assertThat(comments.get(0).getContent(), equalTo(COMMENT_MOCKED.getContent()));
-        assertThat(comments.get(0).getCreationDate(), equalTo(COMMENT_MOCKED.getCreationDate()));
+        assertThat(comments.get(0).getAuthor(), equalTo(AUTHOR));
+        assertThat(comments.get(0).getContent(), equalTo(CONTENT));
+        assertThat(comments.get(0).getCreationDate(), equalTo(now));
 
     }
 

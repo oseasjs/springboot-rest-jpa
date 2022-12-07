@@ -43,79 +43,83 @@ public class PostControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddPostSuccessfully() throws Exception {
 
-        when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
+        when(postService.addPost(any())).thenReturn(postMocked);
 
         mockMvc.perform(post("/v1/posts")
-                .content(json(newPostDtoAsMap()))
+            .content(jsonUtil.mapToJson(newPostDtoAsMap()))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$", is(postMocked.getId().intValue())));
+            .andExpect(jsonPath("$.id", is(postMocked.getId().intValue())))
+            .andExpect(jsonPath("$.title", is(postMocked.getTitle())))
+            .andExpect(jsonPath("$.content", is(postMocked.getContent())))
+            .andExpect(jsonPath("$.creationDate", is(formatDate(postMocked.getCreationDate()))))
+            .andExpect(jsonPath("$.generatedType", is(postMocked.getGeneratedType().toString())));
     }
 
     @Test
     public void shouldAddPostMissingTitleSuccessfully() throws Exception {
 
-        when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
+        when(postService.addPost(any())).thenReturn(postMocked);
 
         Map<String, Object> newPostDtoMap = newPostDtoAsMap();
         newPostDtoMap.remove("title");
 
         mockMvc.perform(post("/v1/posts")
-                .content(json(newPostDtoMap))
+            .content(jsonUtil.mapToJson(newPostDtoMap))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.title", containsString(requiredMsg("Title"))));
+            .andExpect(jsonPath("$.validationMessage.title", containsString(requiredMsg("Title"))));
     }
 
     @Test
     public void shouldAddPostMissingContentSuccessfully() throws Exception {
 
-        when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
+        when(postService.addPost(any())).thenReturn(postMocked);
 
         Map<String, Object> newPostDtoMap = newPostDtoAsMap();
         newPostDtoMap.remove("content");
 
         mockMvc.perform(post("/v1/posts")
-                .content(json(newPostDtoMap))
+            .content(jsonUtil.mapToJson(newPostDtoMap))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.content", containsString(requiredMsg("Content"))));
+            .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))));
     }
 
     @Test
     public void shouldAddPostMissingCreationDateSuccessfully() throws Exception {
 
-        when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
+        when(postService.addPost(any())).thenReturn(postMocked);
 
         Map<String, Object> newPostDtoMap = newPostDtoAsMap();
         newPostDtoMap.remove("creationDate");
 
         mockMvc.perform(post("/v1/posts")
-                .content(json(newPostDtoMap))
+            .content(jsonUtil.mapToJson(newPostDtoMap))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.creationDate", containsString(requiredMsg("Creation Date"))));
+            .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
     }
 
     @Test
     public void shouldAddPostMissingAllFieldDateSuccessfully() throws Exception {
 
-      when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
+      when(postService.addPost(any())).thenReturn(postMocked);
 
       Map<String, Object> newPostDtoMap = new HashMap<>();
 
       mockMvc.perform(post("/v1/posts")
-          .content(json(newPostDtoMap))
+          .content(jsonUtil.mapToJson(newPostDtoMap))
           .contentType(APPLICATION_JSON)
           .accept(APPLICATION_JSON))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.title", containsString(requiredMsg("Title"))))
-        .andExpect(jsonPath("$.content", containsString(requiredMsg("Content"))))
-        .andExpect(jsonPath("$.creationDate", containsString(requiredMsg("Creation Date"))));
+        .andExpect(jsonPath("$.validationMessage.title", containsString(requiredMsg("Title"))))
+        .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))))
+        .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
     }
 
   @Test
@@ -125,16 +129,16 @@ public class PostControllerTest extends AbstractControllerTest {
       .thenReturn(
         List.of(
           JsonPlaceHolderPostDto.builder()
-            .title(NEW_POST_MOCKED.getTitle())
-            .content(NEW_POST_MOCKED.getContent())
-            .creationDate(NEW_POST_MOCKED.getCreationDate())
+            .title(NEW_POST_DTO_MOCKED.getTitle())
+            .content(NEW_POST_DTO_MOCKED.getContent())
+            .creationDate(NEW_POST_DTO_MOCKED.getCreationDate())
             .build()
         )
       );
-    when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
+    when(postService.addPost(any())).thenReturn(postMocked);
 
     mockMvc.perform(post("/v1/posts/remotes")
-        .content(json(newRemotePostDtoAsMap()))
+        .content(jsonUtil.mapToJson(newRemotePostDtoAsMap()))
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON))
       .andExpect(status().isCreated());
@@ -144,7 +148,7 @@ public class PostControllerTest extends AbstractControllerTest {
   public void shouldAddRemotePostMissingLimitSuccessfully() throws Exception {
 
     mockMvc.perform(post("/v1/posts/remotes")
-        .content(json(new HashMap()))
+        .content(jsonUtil.mapToJson(new HashMap()))
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON))
       .andExpect(status().isBadRequest());

@@ -27,8 +27,12 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: Build and Test with Maven
-        run: mvn -B package --file pom.xml
+      - name: Run Maven Install
+        run: mvn install -DskipTests
+      - name: Run Maven Tests
+        run: mvn test -Dspring.profiles.active=test
+      - name: Run Maven Package
+        run: mvn clean package -DskipTests
       - name: Upload coverage to CodeCov
         run: bash <(curl -s https://codecov.io/bash)
       - name: Build Docker Image
