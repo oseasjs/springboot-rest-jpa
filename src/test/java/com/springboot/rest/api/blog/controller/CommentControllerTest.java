@@ -72,7 +72,7 @@ public class CommentControllerTest extends AbstractControllerTest {
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.content", containsString(requiredMsg("Content"))));
+            .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class CommentControllerTest extends AbstractControllerTest {
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.author", containsString(requiredMsg("Author"))));
+            .andExpect(jsonPath("$.validationMessage.author", containsString(requiredMsg("Author"))));
     }
 
     @Test
@@ -98,7 +98,7 @@ public class CommentControllerTest extends AbstractControllerTest {
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.creationDate", containsString(requiredMsg("Creation Date"))));
+            .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
     }
 
     @Test
@@ -108,9 +108,9 @@ public class CommentControllerTest extends AbstractControllerTest {
           .contentType(APPLICATION_JSON)
           .accept(APPLICATION_JSON))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.content", containsString(requiredMsg("Content"))))
-        .andExpect(jsonPath("$.author", containsString(requiredMsg("Author"))))
-        .andExpect(jsonPath("$.creationDate", containsString(requiredMsg("Creation Date"))));
+        .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))))
+        .andExpect(jsonPath("$.validationMessage.author", containsString(requiredMsg("Author"))))
+        .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
     }
 
   @Test

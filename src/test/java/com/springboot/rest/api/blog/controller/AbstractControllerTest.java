@@ -11,11 +11,13 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest
+@Import(JsonUtil.class)
 public abstract class AbstractControllerTest {
 
   @Autowired
@@ -38,7 +40,7 @@ public abstract class AbstractControllerTest {
 
   @BeforeEach
   public void setUp() {
-    Mockito.reset(postService, commentService);
+    Mockito.reset(postService, commentService, jsonPlaceHolderClient, jsonPlaceHolderService);
   }
 
 }
