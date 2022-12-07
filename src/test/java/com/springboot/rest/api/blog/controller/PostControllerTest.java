@@ -46,7 +46,7 @@ public class PostControllerTest extends AbstractControllerTest {
         when(postService.addPost(any())).thenReturn(postMocked);
 
         mockMvc.perform(post("/v1/posts")
-                .content(json(newPostDtoAsMap()))
+            .content(jsonUtil.mapToJson(newPostDtoAsMap()))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isCreated())
@@ -66,7 +66,7 @@ public class PostControllerTest extends AbstractControllerTest {
         newPostDtoMap.remove("title");
 
         mockMvc.perform(post("/v1/posts")
-                .content(json(newPostDtoMap))
+            .content(jsonUtil.mapToJson(newPostDtoMap))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
@@ -82,7 +82,7 @@ public class PostControllerTest extends AbstractControllerTest {
         newPostDtoMap.remove("content");
 
         mockMvc.perform(post("/v1/posts")
-                .content(json(newPostDtoMap))
+            .content(jsonUtil.mapToJson(newPostDtoMap))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
@@ -98,7 +98,7 @@ public class PostControllerTest extends AbstractControllerTest {
         newPostDtoMap.remove("creationDate");
 
         mockMvc.perform(post("/v1/posts")
-                .content(json(newPostDtoMap))
+            .content(jsonUtil.mapToJson(newPostDtoMap))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
@@ -113,7 +113,7 @@ public class PostControllerTest extends AbstractControllerTest {
       Map<String, Object> newPostDtoMap = new HashMap<>();
 
       mockMvc.perform(post("/v1/posts")
-          .content(json(newPostDtoMap))
+          .content(jsonUtil.mapToJson(newPostDtoMap))
           .contentType(APPLICATION_JSON)
           .accept(APPLICATION_JSON))
         .andExpect(status().isBadRequest())
@@ -138,7 +138,7 @@ public class PostControllerTest extends AbstractControllerTest {
     when(postService.addPost(any())).thenReturn(postMocked);
 
     mockMvc.perform(post("/v1/posts/remotes")
-        .content(json(newRemotePostDtoAsMap()))
+        .content(jsonUtil.mapToJson(newRemotePostDtoAsMap()))
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON))
       .andExpect(status().isCreated());
@@ -148,7 +148,7 @@ public class PostControllerTest extends AbstractControllerTest {
   public void shouldAddRemotePostMissingLimitSuccessfully() throws Exception {
 
     mockMvc.perform(post("/v1/posts/remotes")
-        .content(json(new HashMap()))
+        .content(jsonUtil.mapToJson(new HashMap()))
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON))
       .andExpect(status().isBadRequest());

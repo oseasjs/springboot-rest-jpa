@@ -1,7 +1,7 @@
 package com.springboot.rest.api.blog.service;
 
 import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
-import com.springboot.rest.api.blog.exception.NotFoundException;
+import com.springboot.rest.api.blog.exception.BlogBusinessException;
 import com.springboot.rest.api.blog.model.Comment;
 import com.springboot.rest.api.blog.model.Post;
 import com.springboot.rest.api.blog.repository.CommentRepository;
@@ -57,7 +57,7 @@ public class CommentServiceTest {
             commentService.addComment(commentMocked);
         });
 
-        Assertions.assertEquals(NotFoundException.class, exception.getClass());
+      Assertions.assertEquals(BlogBusinessException.class, exception.getClass());
     }
 
     @Test

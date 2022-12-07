@@ -4,6 +4,7 @@ import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderClient;
 import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderService;
 import com.springboot.rest.api.blog.service.CommentService;
 import com.springboot.rest.api.blog.service.PostService;
+import com.springboot.rest.api.blog.util.JsonUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -31,6 +32,9 @@ public abstract class AbstractControllerTest {
 
   @MockBean
   protected JsonPlaceHolderService jsonPlaceHolderService;
+
+  @Autowired
+  protected JsonUtil jsonUtil;
 
   @BeforeEach
   public void setUp() {

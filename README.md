@@ -15,6 +15,7 @@ Blog application to add/get Posts and Comments;
 ### Bootstrapped with:
 
 - Java 11;
+- Maven;
 - Spring Boot;
 - Spring Web;
 - Spring Data;
@@ -33,7 +34,7 @@ Blog application to add/get Posts and Comments;
 - MockMVC;
 - Sonar;
 - Docker;
-- Github Action (CI);
+- Github Action;
 - CodeCov;
 
 ### TODO

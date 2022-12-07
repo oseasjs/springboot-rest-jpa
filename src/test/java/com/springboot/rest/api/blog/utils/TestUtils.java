@@ -1,7 +1,5 @@
 package com.springboot.rest.api.blog.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springboot.rest.api.blog.controller.dto.CommentDto;
 import com.springboot.rest.api.blog.controller.dto.NewCommentDto;
 import com.springboot.rest.api.blog.controller.dto.NewPostDto;
@@ -81,24 +79,12 @@ public abstract class TestUtils {
     return elements;
   }
 
-  public static String json(Map<String, Object> elements) {
-
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.registerModule(new JavaTimeModule());
-
-    try {
-      return objectMapper.writeValueAsString(elements);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+  public static String requiredMsg(String field) {
+    return String.format("%s is required", field);
   }
 
-    public static String requiredMsg(String field) {
-        return String.format("%s is required", field);
-    }
-
-    public static String formatDate(LocalDateTime date) {
-        return date.format(DateTimeFormatter.ISO_DATE_TIME);
-    }
+  public static String formatDate(LocalDateTime date) {
+    return date.format(DateTimeFormatter.ISO_DATE_TIME);
+  }
 
 }

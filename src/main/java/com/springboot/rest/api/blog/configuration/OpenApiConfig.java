@@ -1,5 +1,6 @@
 package com.springboot.rest.api.blog.configuration;
 
+import com.springboot.rest.api.blog.controller.dto.ErrorResponseDto;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -33,27 +34,30 @@ public class OpenApiConfig {
     @Bean
     public OpenApiCustomiser customerGlobalHeaderOpenApiCustomiser() {
 
-        // add default responses
-        // Ref to Error-Object (added in step above)
-        Schema errorResponseSchema = new Schema();
+      // add default responses
+      // Ref to Error-Object (added in step above)
+      Schema errorResponseSchema = new Schema();
+      errorResponseSchema.setName("ErrorResponse");
+      errorResponseSchema.set$ref("#/components/schemas/ErrorResponseDto");
 
-        return openApi -> {
-            if(openApi.getComponents().getSchemas() == null){
-                openApi.getComponents().setSchemas(new HashMap<>());
-            }
-            // add Error and ErrorItem to schema
-            openApi.getComponents().getSchemas().putAll(ModelConverters.getInstance().read(Error.class));
-
-            openApi.getPaths().values().forEach(pathItem -> pathItem.readOperations().forEach(operation -> {
-                if(operation == null){
-                    operation = new Operation();
-                }
-                ApiResponses apiResponses = operation.getResponses();
-                apiResponses.addApiResponse("400", createApiResponse("BadRequest", errorResponseSchema));
-                apiResponses.addApiResponse("403", createApiResponse("Forbidden", null));
-                apiResponses.addApiResponse("500", createApiResponse("Server Error", null));
-            }));
-        };
+      return openApi -> {
+        if (openApi.getComponents().getSchemas() == null) {
+          openApi.getComponents().setSchemas(new HashMap<>());
+        }
+        // add Error and ErrorItem to schema
+        openApi.getComponents().getSchemas().putAll(ModelConverters.getInstance().read(Error.class));
+        openApi.getComponents().getSchemas().putAll(ModelConverters.getInstance().read(ErrorResponseDto.class));
+        openApi.getPaths().values().forEach(pathItem -> pathItem.readOperations().forEach(operation -> {
+          if (operation == null) {
+            operation = new Operation();
+          }
+          ApiResponses apiResponses = operation.getResponses();
+          apiResponses.addApiResponse("400", createApiResponse("BadRequest", errorResponseSchema));
+          apiResponses.addApiResponse("404", createApiResponse("NotFound", errorResponseSchema));
+          apiResponses.addApiResponse("403", createApiResponse("Forbidden", null));
+          apiResponses.addApiResponse("500", createApiResponse("Server Error", null));
+        }));
+      };
     }
 
     private ApiResponse createApiResponse(String message, Schema schema) {
