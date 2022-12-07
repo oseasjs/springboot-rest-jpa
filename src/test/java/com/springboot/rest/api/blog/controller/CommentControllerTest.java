@@ -47,13 +47,19 @@ public class CommentControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddCommentSuccessfully() throws Exception {
 
-        when(commentService.addComment(any())).thenReturn(BigDecimal.ONE.longValue());
+        when(commentService.addComment(any())).thenReturn(commentMocked);
 
         mockMvc.perform(post("/v1/posts/1/comments")
                 .content(json(newCommentDtoAsMap()))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id", is(commentMocked.getId().intValue())))
+            .andExpect(jsonPath("$.postId", is(commentMocked.getPost().getId().intValue())))
+            .andExpect(jsonPath("$.content", is(commentMocked.getContent())))
+            .andExpect(jsonPath("$.author", is(commentMocked.getAuthor())))
+            .andExpect(jsonPath("$.creationDate", is(formatDate(commentMocked.getCreationDate()))))
+            .andExpect(jsonPath("$.generatedType", is(commentMocked.getGeneratedType().toString())));;
     }
 
     @Test
@@ -113,15 +119,15 @@ public class CommentControllerTest extends AbstractControllerTest {
       .thenReturn(
         List.of(
           JsonPlaceHolderCommentDto.builder()
-            .author(NEW_COMMENT_MOCKED.getAuthor())
-            .content(NEW_COMMENT_MOCKED.getContent())
-            .creationDate(NEW_POST_MOCKED.getCreationDate())
+            .author(AUTHOR)
+            .content(CONTENT)
+            .creationDate(now)
             .postId(BigDecimal.ONE.longValue())
             .build()
         )
       );
 
-    when(commentService.addComment(any())).thenReturn(BigDecimal.ONE.longValue());
+    when(commentService.addComment(any())).thenReturn(commentMocked);
 
     mockMvc.perform(post("/v1/posts/1/comments/remotes")
         .content(json(newRemoteCommentDtoAsMap()))

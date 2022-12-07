@@ -43,20 +43,24 @@ public class PostControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddPostSuccessfully() throws Exception {
 
-        when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
+        when(postService.addPost(any())).thenReturn(postMocked);
 
         mockMvc.perform(post("/v1/posts")
                 .content(json(newPostDtoAsMap()))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$", is(postMocked.getId().intValue())));
+            .andExpect(jsonPath("$.id", is(postMocked.getId().intValue())))
+            .andExpect(jsonPath("$.title", is(postMocked.getTitle())))
+            .andExpect(jsonPath("$.content", is(postMocked.getContent())))
+            .andExpect(jsonPath("$.creationDate", is(formatDate(postMocked.getCreationDate()))))
+            .andExpect(jsonPath("$.generatedType", is(postMocked.getGeneratedType().toString())));
     }
 
     @Test
     public void shouldAddPostMissingTitleSuccessfully() throws Exception {
 
-        when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
+        when(postService.addPost(any())).thenReturn(postMocked);
 
         Map<String, Object> newPostDtoMap = newPostDtoAsMap();
         newPostDtoMap.remove("title");
@@ -72,7 +76,7 @@ public class PostControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddPostMissingContentSuccessfully() throws Exception {
 
-        when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
+        when(postService.addPost(any())).thenReturn(postMocked);
 
         Map<String, Object> newPostDtoMap = newPostDtoAsMap();
         newPostDtoMap.remove("content");
@@ -88,7 +92,7 @@ public class PostControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddPostMissingCreationDateSuccessfully() throws Exception {
 
-        when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
+        when(postService.addPost(any())).thenReturn(postMocked);
 
         Map<String, Object> newPostDtoMap = newPostDtoAsMap();
         newPostDtoMap.remove("creationDate");
@@ -104,7 +108,7 @@ public class PostControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddPostMissingAllFieldDateSuccessfully() throws Exception {
 
-      when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
+      when(postService.addPost(any())).thenReturn(postMocked);
 
       Map<String, Object> newPostDtoMap = new HashMap<>();
 
@@ -125,13 +129,13 @@ public class PostControllerTest extends AbstractControllerTest {
       .thenReturn(
         List.of(
           JsonPlaceHolderPostDto.builder()
-            .title(NEW_POST_MOCKED.getTitle())
-            .content(NEW_POST_MOCKED.getContent())
-            .creationDate(NEW_POST_MOCKED.getCreationDate())
+            .title(NEW_POST_DTO_MOCKED.getTitle())
+            .content(NEW_POST_DTO_MOCKED.getContent())
+            .creationDate(NEW_POST_DTO_MOCKED.getCreationDate())
             .build()
         )
       );
-    when(postService.addPost(any())).thenReturn(BigDecimal.ONE.longValue());
+    when(postService.addPost(any())).thenReturn(postMocked);
 
     mockMvc.perform(post("/v1/posts/remotes")
         .content(json(newRemotePostDtoAsMap()))

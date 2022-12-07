@@ -48,14 +48,17 @@ public class PostController {
   @Operation(summary = "Add new Post", responses = {
     @ApiResponse(responseCode = "201",
             description = "Ok",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class))),
         @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long addPost(@Valid @RequestBody NewPostDto newPostDto) {
+    public PostDto addPost(@Valid @RequestBody NewPostDto newPostDto) {
         log.info("Adding post");
-        return this.postService.addPost(PostMapper.INSTANCE.toEntity(newPostDto));
+        return PostMapper.INSTANCE.toDTO(
+            this.postService
+            .addPost(PostMapper.INSTANCE.toEntity(newPostDto))
+          );
     }
 
     @Operation(summary = "Add news Posts from Json Place Holder public API", responses = {

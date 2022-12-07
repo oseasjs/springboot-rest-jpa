@@ -24,7 +24,7 @@ public class CommentService {
         return this.commentRepository.existsByPostIdAndAuthor(postId, author);
     }
 
-    public Long addComment(Comment comment) {
+    public Comment addComment(Comment comment) {
 
         this.postRepository
             .findById(comment.getPost().getId())
@@ -36,7 +36,6 @@ public class CommentService {
             );
 
         return this.commentRepository
-            .save(comment)
-            .getId();
+            .save(comment);
     }
 }

@@ -75,7 +75,7 @@ public class PostServiceTest {
 
     @Test
     public void shouldCreatedPostSuccessfully() {
-        Long postId = postService.addPost(postMocked);
+        Long postId = postService.addPost(postMocked).getId();
         assertNotNull(postId, "Post ID shouldn't be null");
     }
 

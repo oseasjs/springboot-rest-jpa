@@ -52,17 +52,19 @@ public class CommentController {
     @Operation(summary = "Add new Comment", responses = {
         @ApiResponse(responseCode = "201",
             description = "Ok",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class))),
         @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long addComment(@PathVariable Long postId, @Valid @RequestBody NewCommentDto newCommentDto) {
+    public CommentDto addComment(@PathVariable Long postId, @Valid @RequestBody NewCommentDto newCommentDto) {
         newCommentDto.setPostId(postId);
         log.info("Adding comment with postId {}", postId);
-        return this
+        return CommentMapper.INSTANCE.toDTO(
+          this
             .commentService
-            .addComment(CommentMapper.INSTANCE.toEntity(newCommentDto));
+            .addComment(CommentMapper.INSTANCE.toEntity(newCommentDto))
+        );
     }
 
     @Operation(summary = "Add new Comments on existing Posts from Json Place Holder public API", responses = {

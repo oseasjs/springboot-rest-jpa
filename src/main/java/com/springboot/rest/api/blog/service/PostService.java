@@ -18,10 +18,8 @@ public class PostService {
             .orElseThrow(() -> new NotFoundException(String.format("Post not found with ID = %d", id)));
     }
 
-    public Long addPost(Post post) {
-        return postRepository
-            .save(post)
-            .getId();
+    public Post addPost(Post post) {
+        return postRepository.save(post);
     }
 
     public boolean existsByTitle(String title) {
