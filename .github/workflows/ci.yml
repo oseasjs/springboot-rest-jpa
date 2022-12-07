@@ -28,7 +28,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Run Maven Install
-        run: mvn install
+        run: mvn install -DskipTests
       - name: Run Maven Tests
         run: mvn test -Dspring.profiles.active=test
       - name: Run Maven Pagkage
