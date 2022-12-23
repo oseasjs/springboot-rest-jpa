@@ -9,12 +9,13 @@ import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class TestUtils {
 
-  public static final LocalDateTime now = LocalDateTime.now();
+  public static final LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
   public static final String TITLE = "title";
   public static final String CONTENT = "content";
   public static final String AUTHOR = "author";
