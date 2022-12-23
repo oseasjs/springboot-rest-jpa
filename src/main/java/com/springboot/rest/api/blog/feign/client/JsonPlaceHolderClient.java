@@ -14,13 +14,13 @@ import java.util.List;
 @FeignClient(value = "jplaceholder", url = "${jplaceholder.url}")
 public interface JsonPlaceHolderClient {
 
-    Logger LOGGER =  LoggerFactory.getLogger(JsonPlaceHolderClient.class);
+  Logger LOGGER = LoggerFactory.getLogger(JsonPlaceHolderClient.class);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/posts")
-    public List<JsonPlaceHolderPostDto> getPosts();
+  @RequestMapping(method = RequestMethod.GET, value = "/posts")
+  public List<JsonPlaceHolderPostDto> getPosts();
 
-    @RequestMapping(method = RequestMethod.GET, value = "/posts/{postId}/comments")
-    public List<JsonPlaceHolderCommentDto> getComments(
-      @PathVariable("postId") Long postId);
+  @RequestMapping(method = RequestMethod.GET, value = "/posts/{postId}/comments")
+  public List<JsonPlaceHolderCommentDto> getComments(
+    @PathVariable("postId") Long postId);
 
 }

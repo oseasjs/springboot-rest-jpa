@@ -2,13 +2,13 @@ package com.springboot.rest.api.blog.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor

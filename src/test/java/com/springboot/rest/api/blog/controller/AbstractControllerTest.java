@@ -6,16 +6,13 @@ import com.springboot.rest.api.blog.service.CommentService;
 import com.springboot.rest.api.blog.service.PostService;
 import com.springboot.rest.api.blog.util.JsonUtil;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-@ExtendWith(SpringExtension.class)
 @WebMvcTest
 @Import(JsonUtil.class)
 public abstract class AbstractControllerTest {

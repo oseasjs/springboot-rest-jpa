@@ -1,13 +1,13 @@
 package com.springboot.rest.api.blog.model;
 
 import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
-import com.sun.istack.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity

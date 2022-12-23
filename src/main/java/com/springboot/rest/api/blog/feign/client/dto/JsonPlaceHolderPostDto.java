@@ -12,16 +12,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class JsonPlaceHolderPostDto {
-    private String title;
-
-    @JsonProperty("body")
-    private String content;
-
-    @JsonIgnore
-    @Getter
-    private final GeneratedTypeEnum generatedType = GeneratedTypeEnum.AUTO;
-
-    @JsonIgnore
-    @Getter
-    private LocalDateTime creationDate = LocalDateTime.now();
+  @JsonIgnore
+  @Getter
+  private final GeneratedTypeEnum generatedType = GeneratedTypeEnum.AUTO;
+  private String title;
+  @JsonProperty("body")
+  private String content;
+  @JsonIgnore
+  @Getter
+  private LocalDateTime creationDate = LocalDateTime.now();
 }

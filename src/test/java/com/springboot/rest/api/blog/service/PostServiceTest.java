@@ -20,11 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class PostServiceTest {
-  @Autowired
-  PostRepository postRepository;
 
   @Autowired
-  PostService postService;
+  private PostRepository postRepository;
+
+  @Autowired
+  private PostService postService;
 
   private Post existingPost;
   private Post postMocked = new Post(null, TITLE, CONTENT, now, GeneratedTypeEnum.MANUAL);
@@ -49,34 +50,34 @@ public class PostServiceTest {
     assertEquals(post.getId(), existingPost.getId());
     assertEquals(post.getContent(), existingPost.getContent());
     assertEquals(post.getTitle(), existingPost.getTitle());
-        assertEquals(post.getCreationDate(), existingPost.getCreationDate());
-    }
+    assertEquals(post.getCreationDate(), existingPost.getCreationDate());
+  }
 
-    @Test
-    public void shouldReturnExceptionForNotExistingPostSuccessfully() {
-        Exception exception = Assertions.assertThrows(Exception.class, () -> {
-            postService.getPost(BigDecimal.ZERO.subtract(BigDecimal.ONE).longValue());
-        });
+  @Test
+  public void shouldReturnExceptionForNotExistingPostSuccessfully() {
+    Exception exception = Assertions.assertThrows(Exception.class, () -> {
+      postService.getPost(BigDecimal.ZERO.subtract(BigDecimal.ONE).longValue());
+    });
 
-        Assertions.assertEquals(NotFoundException.class, exception.getClass());
-    }
+    Assertions.assertEquals(NotFoundException.class, exception.getClass());
+  }
 
-    @Test
-    public void shouldReturnPostForNotExistingPostSuccessfully() {
-        Post postFound = postService.getPost(existingPost.getId());
+  @Test
+  public void shouldReturnPostForNotExistingPostSuccessfully() {
+    Post postFound = postService.getPost(existingPost.getId());
 
-        assertNotNull(postFound, "Post shouldn't be null");
-        assertEquals(postFound.getId(), existingPost.getId());
-        assertEquals(postFound.getContent(), existingPost.getContent());
-        assertEquals(postFound.getTitle(), existingPost.getTitle());
-        assertEquals(postFound.getCreationDate(), existingPost.getCreationDate());
+    assertNotNull(postFound, "Post shouldn't be null");
+    assertEquals(postFound.getId(), existingPost.getId());
+    assertEquals(postFound.getContent(), existingPost.getContent());
+    assertEquals(postFound.getTitle(), existingPost.getTitle());
+    assertEquals(postFound.getCreationDate(), existingPost.getCreationDate());
 
-    }
+  }
 
-    @Test
-    public void shouldCreatedPostSuccessfully() {
-        Long postId = postService.addPost(postMocked).getId();
-        assertNotNull(postId, "Post ID shouldn't be null");
-    }
+  @Test
+  public void shouldCreatedPostSuccessfully() {
+    Long postId = postService.addPost(postMocked).getId();
+    assertNotNull(postId, "Post ID shouldn't be null");
+  }
 
 }

@@ -10,20 +10,20 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class PostService {
 
-    private PostRepository postRepository;
+  private PostRepository postRepository;
 
-    public Post getPost(Long id) {
-        return postRepository
-            .findById(id)
-            .orElseThrow(() -> new NotFoundException(String.format("Post not found with ID = %d", id)));
-    }
+  public Post getPost(Long id) {
+    return postRepository
+      .findById(id)
+      .orElseThrow(() -> new NotFoundException(String.format("Post not found with ID = %d", id)));
+  }
 
-    public Post addPost(Post post) {
-        return postRepository.save(post);
-    }
+  public Post addPost(Post post) {
+    return postRepository.save(post);
+  }
 
-    public boolean existsByTitle(String title) {
-        return postRepository.existsByTitle(title);
-    }
+  public boolean existsByTitle(String title) {
+    return postRepository.existsByTitle(title);
+  }
 
 }

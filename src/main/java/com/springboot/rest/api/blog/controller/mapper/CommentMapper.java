@@ -14,18 +14,18 @@ import java.util.List;
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface CommentMapper {
 
-    CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
+  CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
-    @Mapping(source="postId", target="post.id")
-    Comment toEntity(NewCommentDto source);
+  @Mapping(source = "postId", target = "post.id")
+  Comment toEntity(NewCommentDto source);
 
-    @Mapping(source="postId", target="post.id")
-    Comment toEntity(JsonPlaceHolderCommentDto source);
+  @Mapping(source = "postId", target = "post.id")
+  Comment toEntity(JsonPlaceHolderCommentDto source);
 
-    @Mapping(source="post.id", target="postId")
-    CommentDto toDTO(Comment source);
+  @Mapping(source = "post.id", target = "postId")
+  CommentDto toDTO(Comment source);
 
-    @Mapping(source="post.id", target="postId")
-    List<CommentDto> asDtoList(List<Comment> commentList);
+  @Mapping(source = "post.id", target = "postId")
+  List<CommentDto> asDtoList(List<Comment> commentList);
 
 }

@@ -30,107 +30,109 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class JsonPlaceHolderServiceTest {
 
-    private final Post postMocked = new Post(null, TITLE, CONTENT, now, GeneratedTypeEnum.MANUAL);
-    @MockBean
-    private JsonPlaceHolderClient jsonPlaceHolderClient;
-    @Autowired
-    private JsonPlaceHolderService jsonPlaceHolderService;
-    @Autowired
-    private PostService postService;
-    @Autowired
-    private PostRepository postRepository;
-    @Autowired
-    private CommentRepository commentRepository;
-    private Post existingPost;
+  private final Post postMocked = new Post(null, TITLE, CONTENT, now, GeneratedTypeEnum.MANUAL);
 
-    @BeforeEach
-    public void setup() {
-        existingPost = postRepository.save(postMocked);
-    }
+  @MockBean
+  protected JsonPlaceHolderClient jsonPlaceHolderClient;
 
-    @AfterEach
-    public void tearDown() {
-        commentRepository
-          .findAll()
-          .forEach(comment -> commentRepository.delete(comment));
+  @Autowired
+  private JsonPlaceHolderService jsonPlaceHolderService;
+  @Autowired
+  private PostService postService;
+  @Autowired
+  private PostRepository postRepository;
+  @Autowired
+  private CommentRepository commentRepository;
+  private Post existingPost;
 
-        postRepository
-          .findAll()
-          .forEach(p -> postRepository.delete(p));
-    }
+  @BeforeEach
+  public void setup() {
+    existingPost = postRepository.save(postMocked);
+  }
 
-    @Test
-    public void getRemotePostsSuccessfully() {
+  @AfterEach
+  public void tearDown() {
+    commentRepository
+      .findAll()
+      .forEach(comment -> commentRepository.delete(comment));
 
-        final String NEW_TITLE = TITLE + UUID.randomUUID();
+    postRepository
+      .findAll()
+      .forEach(p -> postRepository.delete(p));
+  }
 
-        when(jsonPlaceHolderClient.getPosts())
-          .thenReturn(
-            List.of(
-              JsonPlaceHolderPostDto.builder()
-                .title(NEW_TITLE)
-                .content(CONTENT)
-                .creationDate(now)
-                .build()
-            )
-          );
+  @Test
+  public void getRemotePostsSuccessfully() {
 
-        jsonPlaceHolderService.addRemotePosts(
-          RemotePostDto
-            .builder()
-            .limit(1)
+    final String NEW_TITLE = TITLE + UUID.randomUUID();
+
+    when(jsonPlaceHolderClient.getPosts())
+      .thenReturn(
+        List.of(
+          JsonPlaceHolderPostDto.builder()
+            .title(NEW_TITLE)
+            .content(CONTENT)
+            .creationDate(now)
             .build()
-        );
+        )
+      );
 
-        Post postFound = postRepository
-          .findAll()
-          .stream()
-          .filter(p -> p.getTitle().equals(NEW_TITLE))
-          .iterator()
-          .next();
+    jsonPlaceHolderService.addRemotePosts(
+      RemotePostDto
+        .builder()
+        .limit(1)
+        .build()
+    );
 
-        assertNotNull(postFound, "Post shouldn't be null");
-        assertEquals(postFound.getTitle(), NEW_TITLE);
-        assertEquals(postFound.getContent(), CONTENT);
-        assertEquals(postFound.getCreationDate(), now);
-        assertEquals(postFound.getGeneratedType(), GeneratedTypeEnum.AUTO);
+    Post postFound = postRepository
+      .findAll()
+      .stream()
+      .filter(p -> p.getTitle().equals(NEW_TITLE))
+      .iterator()
+      .next();
 
-    }
+    assertNotNull(postFound, "Post shouldn't be null");
+    assertEquals(postFound.getTitle(), NEW_TITLE);
+    assertEquals(postFound.getContent(), CONTENT);
+    assertEquals(postFound.getCreationDate(), now);
+    assertEquals(postFound.getGeneratedType(), GeneratedTypeEnum.AUTO);
 
-    @Test
-    public void getRemoteCommentsSuccessfully() {
+  }
 
-        when(jsonPlaceHolderClient.getComments(any()))
-          .thenReturn(
-            List.of(
-              JsonPlaceHolderCommentDto.builder()
-                .author(AUTHOR)
-                .content(CONTENT)
-                .creationDate(now)
-                .postId(existingPost.getId())
-                .build()
-            )
-          );
+  @Test
+  public void getRemoteCommentsSuccessfully() {
 
-        jsonPlaceHolderService.addRemoteComments(
-          existingPost.getId(),
-          RemoteCommentDto
-            .builder()
-            .limit(1)
+    when(jsonPlaceHolderClient.getComments(any()))
+      .thenReturn(
+        List.of(
+          JsonPlaceHolderCommentDto.builder()
+            .author(AUTHOR)
+            .content(CONTENT)
+            .creationDate(now)
+            .postId(existingPost.getId())
             .build()
-        );
+        )
+      );
 
-        Comment commentFound = commentRepository
-          .findAll()
-          .iterator()
-          .next();
+    jsonPlaceHolderService.addRemoteComments(
+      existingPost.getId(),
+      RemoteCommentDto
+        .builder()
+        .limit(1)
+        .build()
+    );
 
-        assertNotNull(commentFound, "Comment shouldn't be null");
-        assertEquals(commentFound.getContent(), CONTENT);
-        assertEquals(commentFound.getAuthor(), AUTHOR);
-        assertEquals(commentFound.getCreationDate(), now);
-        assertEquals(commentFound.getGeneratedType(), GeneratedTypeEnum.AUTO);
+    Comment commentFound = commentRepository
+      .findAll()
+      .iterator()
+      .next();
 
-    }
+    assertNotNull(commentFound, "Comment shouldn't be null");
+    assertEquals(commentFound.getContent(), CONTENT);
+    assertEquals(commentFound.getAuthor(), AUTHOR);
+    assertEquals(commentFound.getCreationDate(), now);
+    assertEquals(commentFound.getGeneratedType(), GeneratedTypeEnum.AUTO);
+
+  }
 
 }

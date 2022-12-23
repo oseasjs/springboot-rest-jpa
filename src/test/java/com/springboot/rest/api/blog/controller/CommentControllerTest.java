@@ -44,74 +44,75 @@ public class CommentControllerTest extends AbstractControllerTest {
 
   }
 
-    @Test
-    public void shouldAddCommentSuccessfully() throws Exception {
+  @Test
+  public void shouldAddCommentSuccessfully() throws Exception {
 
-        when(commentService.addComment(any())).thenReturn(commentMocked);
+    when(commentService.addComment(any())).thenReturn(commentMocked);
 
-        mockMvc.perform(post("/v1/posts/1/comments")
-            .content(jsonUtil.mapToJson(newCommentDtoAsMap()))
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.id", is(commentMocked.getId().intValue())))
-            .andExpect(jsonPath("$.postId", is(commentMocked.getPost().getId().intValue())))
-            .andExpect(jsonPath("$.content", is(commentMocked.getContent())))
-            .andExpect(jsonPath("$.author", is(commentMocked.getAuthor())))
-            .andExpect(jsonPath("$.creationDate", is(formatDate(commentMocked.getCreationDate()))))
-            .andExpect(jsonPath("$.generatedType", is(commentMocked.getGeneratedType().toString())));;
-    }
+    mockMvc.perform(post("/v1/posts/1/comments")
+        .content(jsonUtil.mapToJson(newCommentDtoAsMap()))
+        .contentType(APPLICATION_JSON)
+        .accept(APPLICATION_JSON))
+      .andExpect(status().isCreated())
+      .andExpect(jsonPath("$.id", is(commentMocked.getId().intValue())))
+      .andExpect(jsonPath("$.postId", is(commentMocked.getPost().getId().intValue())))
+      .andExpect(jsonPath("$.content", is(commentMocked.getContent())))
+      .andExpect(jsonPath("$.author", is(commentMocked.getAuthor())))
+      .andExpect(jsonPath("$.creationDate", is(formatDate(commentMocked.getCreationDate()))))
+      .andExpect(jsonPath("$.generatedType", is(commentMocked.getGeneratedType().toString())));
+    ;
+  }
 
-    @Test
-    public void shouldAddCommentMissingContentSuccessfully() throws Exception {
-        Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
-        newPostDtoMap.remove("content");
+  @Test
+  public void shouldAddCommentMissingContentSuccessfully() throws Exception {
+    Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
+    newPostDtoMap.remove("content");
 
-        mockMvc.perform(post("/v1/posts/1/comments")
-            .content(jsonUtil.mapToJson(newPostDtoMap))
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))));
-    }
+    mockMvc.perform(post("/v1/posts/1/comments")
+        .content(jsonUtil.mapToJson(newPostDtoMap))
+        .contentType(APPLICATION_JSON)
+        .accept(APPLICATION_JSON))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))));
+  }
 
-    @Test
-    public void shouldAddCommentMissingAuthorSuccessfully() throws Exception {
-        Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
-        newPostDtoMap.remove("author");
+  @Test
+  public void shouldAddCommentMissingAuthorSuccessfully() throws Exception {
+    Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
+    newPostDtoMap.remove("author");
 
-        mockMvc.perform(post("/v1/posts/1/comments")
-            .content(jsonUtil.mapToJson(newPostDtoMap))
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.validationMessage.author", containsString(requiredMsg("Author"))));
-    }
+    mockMvc.perform(post("/v1/posts/1/comments")
+        .content(jsonUtil.mapToJson(newPostDtoMap))
+        .contentType(APPLICATION_JSON)
+        .accept(APPLICATION_JSON))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.validationMessage.author", containsString(requiredMsg("Author"))));
+  }
 
-    @Test
-    public void shouldAddCommentMissingCreationSuccessfully() throws Exception {
-        Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
-        newPostDtoMap.remove("creationDate");
+  @Test
+  public void shouldAddCommentMissingCreationSuccessfully() throws Exception {
+    Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
+    newPostDtoMap.remove("creationDate");
 
-        mockMvc.perform(post("/v1/posts/1/comments")
-            .content(jsonUtil.mapToJson(newPostDtoMap))
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
-    }
+    mockMvc.perform(post("/v1/posts/1/comments")
+        .content(jsonUtil.mapToJson(newPostDtoMap))
+        .contentType(APPLICATION_JSON)
+        .accept(APPLICATION_JSON))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
+  }
 
-    @Test
-    public void shouldAddCommentMissingAllFieldsSuccessfully() throws Exception {
-      mockMvc.perform(post("/v1/posts/1/comments")
-          .content(jsonUtil.mapToJson(new HashMap<>()))
-          .contentType(APPLICATION_JSON)
-          .accept(APPLICATION_JSON))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))))
-        .andExpect(jsonPath("$.validationMessage.author", containsString(requiredMsg("Author"))))
-        .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
-    }
+  @Test
+  public void shouldAddCommentMissingAllFieldsSuccessfully() throws Exception {
+    mockMvc.perform(post("/v1/posts/1/comments")
+        .content(jsonUtil.mapToJson(new HashMap<>()))
+        .contentType(APPLICATION_JSON)
+        .accept(APPLICATION_JSON))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))))
+      .andExpect(jsonPath("$.validationMessage.author", containsString(requiredMsg("Author"))))
+      .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
+  }
 
   @Test
   public void shouldAddRemoteCommentsSuccessfully() throws Exception {

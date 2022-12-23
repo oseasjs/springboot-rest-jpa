@@ -43,47 +43,47 @@ public class CommentServiceTest {
   public void tearDown() {
     commentRepository
       .findAll()
-            .forEach(comment -> commentRepository.delete(comment));
+      .forEach(comment -> commentRepository.delete(comment));
 
     postRepository
       .findAll()
       .forEach(p -> postRepository.delete(p));
-    }
+  }
 
-    @Test
-    public void shouldReturnExceptionForNotExistingPostSuccessfully() {
-        Exception exception = Assertions.assertThrows(Exception.class, () -> {
-            commentMocked.getPost().setId(BigDecimal.ZERO.subtract(BigDecimal.ONE).longValue());
-            commentService.addComment(commentMocked);
-        });
+  @Test
+  public void shouldReturnExceptionForNotExistingPostSuccessfully() {
+    Exception exception = Assertions.assertThrows(Exception.class, () -> {
+      commentMocked.getPost().setId(BigDecimal.ZERO.subtract(BigDecimal.ONE).longValue());
+      commentService.addComment(commentMocked);
+    });
 
-      Assertions.assertEquals(BlogBusinessException.class, exception.getClass());
-    }
+    Assertions.assertEquals(BlogBusinessException.class, exception.getClass());
+  }
 
-    @Test
-    public void shouldAddCommentSuccessfully() {
-        Long commentId = commentService.addComment(commentMocked).getId();
+  @Test
+  public void shouldAddCommentSuccessfully() {
+    Long commentId = commentService.addComment(commentMocked).getId();
 
-        assertThat("Comment id shouldn't be null", commentId, notNullValue());
-    }
+    assertThat("Comment id shouldn't be null", commentId, notNullValue());
+  }
 
-    @Test
-    public void shouldReturnAddedCommentSuccessfully() {
-        commentService.addComment(commentMocked);
+  @Test
+  public void shouldReturnAddedCommentSuccessfully() {
+    commentService.addComment(commentMocked);
 
-        List<Comment> comments = commentService.getCommentsForPost(existingPost.getId(), PageRequest.of(0, 5));
+    List<Comment> comments = commentService.getCommentsForPost(existingPost.getId(), PageRequest.of(0, 5));
 
-        assertThat("There should be one comment", comments, hasSize(1));
-        assertThat(comments.get(0).getAuthor(), equalTo(AUTHOR));
-        assertThat(comments.get(0).getContent(), equalTo(CONTENT));
-        assertThat(comments.get(0).getCreationDate(), equalTo(now));
+    assertThat("There should be one comment", comments, hasSize(1));
+    assertThat(comments.get(0).getAuthor(), equalTo(AUTHOR));
+    assertThat(comments.get(0).getContent(), equalTo(CONTENT));
+    assertThat(comments.get(0).getCreationDate(), equalTo(now));
 
-    }
+  }
 
-    @Test
-    public void shouldReturnEmptyArrayCommentsSuccessfully() {
-        List<Comment> comments = commentService.getCommentsForPost(existingPost.getId(), PageRequest.of(0, 5));
-        assertThat("There should not have comments related to the postId", comments, hasSize(0));
-    }
+  @Test
+  public void shouldReturnEmptyArrayCommentsSuccessfully() {
+    List<Comment> comments = commentService.getCommentsForPost(existingPost.getId(), PageRequest.of(0, 5));
+    assertThat("There should not have comments related to the postId", comments, hasSize(0));
+  }
 
 }

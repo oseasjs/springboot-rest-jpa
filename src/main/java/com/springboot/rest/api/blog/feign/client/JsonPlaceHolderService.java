@@ -14,31 +14,31 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 @Slf4j
 public class JsonPlaceHolderService {
-    private JsonPlaceHolderClient jsonPlaceHolderClient;
-    private PostService postService;
-    private CommentService commentService;
+  private JsonPlaceHolderClient jsonPlaceHolderClient;
+  private PostService postService;
+  private CommentService commentService;
 
-    public void addRemotePosts(RemotePostDto remotePostDto) {
-        log.info("Getting {} posts from Json Place Holder", remotePostDto.getLimit());
-        jsonPlaceHolderClient
-          .getPosts()
-          .stream()
-          .filter(p -> !postService.existsByTitle(p.getTitle()))
-          .limit(remotePostDto.getLimit())
-          .map(PostMapper.INSTANCE::toEntity)
-          .forEach(postService::addPost);
-        log.info("{} Posts saved from Json Place Holder", remotePostDto.getLimit());
-    }
+  public void addRemotePosts(RemotePostDto remotePostDto) {
+    log.debug("Getting {} posts from Json Place Holder", remotePostDto.getLimit());
+    jsonPlaceHolderClient
+      .getPosts()
+      .stream()
+      .filter(p -> !postService.existsByTitle(p.getTitle()))
+      .limit(remotePostDto.getLimit())
+      .map(PostMapper.INSTANCE::toEntity)
+      .forEach(postService::addPost);
+    log.debug("{} Posts saved from Json Place Holder", remotePostDto.getLimit());
+  }
 
-    public void addRemoteComments(Long postId, RemoteCommentDto remoteCommentDto) {
-        log.info("Getting {} comments from Json Place Holder", remoteCommentDto.getLimit());
-        jsonPlaceHolderClient
-          .getComments(postId)
-          .stream()
-          .filter(c -> !commentService.existsByPostIdAndAuthor(c.getPostId(), c.getAuthor()))
-          .limit(remoteCommentDto.getLimit())
-          .map(CommentMapper.INSTANCE::toEntity)
-          .forEach(commentService::addComment);
-        log.info("{} Comments saved from Json Place Holder", remoteCommentDto.getLimit());
-    }
+  public void addRemoteComments(Long postId, RemoteCommentDto remoteCommentDto) {
+    log.info("Getting {} comments from Json Place Holder", remoteCommentDto.getLimit());
+    jsonPlaceHolderClient
+      .getComments(postId)
+      .stream()
+      .filter(c -> !commentService.existsByPostIdAndAuthor(c.getPostId(), c.getAuthor()))
+      .limit(remoteCommentDto.getLimit())
+      .map(CommentMapper.INSTANCE::toEntity)
+      .forEach(commentService::addComment);
+    log.info("{} Comments saved from Json Place Holder", remoteCommentDto.getLimit());
+  }
 }

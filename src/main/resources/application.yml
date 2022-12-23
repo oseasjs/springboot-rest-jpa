@@ -29,6 +29,14 @@ spring:
   flyway:
     default-schema: blog
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    org.hibernate.envers.boot: ERROR
+
 management:
   endpoints:
     web:

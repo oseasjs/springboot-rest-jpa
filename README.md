@@ -8,22 +8,23 @@
 
 ### Description
 
-Blog application to add/get Posts and Comments;  
+Blog application to add/get Posts and Comments;
+
 * Blog data persisted on blog schema;
 * Audit data persisted on audit schema;
 
 ### Bootstrapped with:
 
-- Java 11;
+- Java 17;
 - Maven;
-- Spring Boot;
+- Spring Boot 3;
+- Spring Cloud 2022;
 - Spring Web;
 - Spring Data;
 - Spring Validation;
 - Spring Actuator;
-- Spring OpenFeign
-- Spring Sleuth;
-- SpringDoc OpenAPI 3;
+- Spring OpenFeign;
+- SpringDoc OpenAPI;
 - Hibernate Envers;
 - Global Exception Handler;
 - Lombok;
@@ -42,4 +43,5 @@ Blog application to add/get Posts and Comments;
 - Resilient4J
 - ActiveMQ
 - Spring Security JWT
+- Micrometer
 
