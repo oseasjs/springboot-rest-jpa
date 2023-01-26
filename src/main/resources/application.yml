@@ -28,6 +28,7 @@ spring:
             default_schema: audit
   flyway:
     default-schema: blog
+#    enabled: false
 
 springdoc:
   swagger-ui:

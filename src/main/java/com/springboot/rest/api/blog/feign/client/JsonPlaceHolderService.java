@@ -1,7 +1,7 @@
 package com.springboot.rest.api.blog.feign.client;
 
-import com.springboot.rest.api.blog.controller.dto.RemoteCommentDto;
-import com.springboot.rest.api.blog.controller.dto.RemotePostDto;
+import com.springboot.rest.api.blog.controller.dto.NewRemoteCommentDto;
+import com.springboot.rest.api.blog.controller.dto.NewRemotePostDto;
 import com.springboot.rest.api.blog.controller.mapper.CommentMapper;
 import com.springboot.rest.api.blog.controller.mapper.PostMapper;
 import com.springboot.rest.api.blog.service.CommentService;
@@ -18,27 +18,27 @@ public class JsonPlaceHolderService {
   private PostService postService;
   private CommentService commentService;
 
-  public void addRemotePosts(RemotePostDto remotePostDto) {
-    log.debug("Getting {} posts from Json Place Holder", remotePostDto.getLimit());
+  public void addRemotePosts(NewRemotePostDto newRemotePostDto) {
+    log.debug("Getting {} posts from Json Place Holder", newRemotePostDto.getLimit());
     jsonPlaceHolderClient
       .getPosts()
       .stream()
       .filter(p -> !postService.existsByTitle(p.getTitle()))
-      .limit(remotePostDto.getLimit())
+      .limit(newRemotePostDto.getLimit())
       .map(PostMapper.INSTANCE::toEntity)
       .forEach(postService::addPost);
-    log.debug("{} Posts saved from Json Place Holder", remotePostDto.getLimit());
+    log.debug("{} Posts saved from Json Place Holder", newRemotePostDto.getLimit());
   }
 
-  public void addRemoteComments(Long postId, RemoteCommentDto remoteCommentDto) {
-    log.info("Getting {} comments from Json Place Holder", remoteCommentDto.getLimit());
+  public void addRemoteComments(Long postId, NewRemoteCommentDto newRemoteCommentDto) {
+    log.info("Getting {} comments from Json Place Holder", newRemoteCommentDto.getLimit());
     jsonPlaceHolderClient
       .getComments(postId)
       .stream()
       .filter(c -> !commentService.existsByPostIdAndAuthor(c.getPostId(), c.getAuthor()))
-      .limit(remoteCommentDto.getLimit())
+      .limit(newRemoteCommentDto.getLimit())
       .map(CommentMapper.INSTANCE::toEntity)
       .forEach(commentService::addComment);
-    log.info("{} Comments saved from Json Place Holder", remoteCommentDto.getLimit());
+    log.info("{} Comments saved from Json Place Holder", newRemoteCommentDto.getLimit());
   }
 }

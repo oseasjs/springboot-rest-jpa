@@ -2,6 +2,8 @@ package com.springboot.rest.api.blog.configuration;
 
 import com.springboot.rest.api.blog.controller.dto.ErrorResponseDto;
 import io.swagger.v3.core.converter.ModelConverters;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -18,6 +20,12 @@ import org.springframework.context.annotation.Configuration;
 import java.util.HashMap;
 
 @Configuration
+@SecurityScheme(
+  name = "Bearer Authentication",
+  type = SecuritySchemeType.HTTP,
+  bearerFormat = "JWT",
+  scheme = "bearer"
+)
 public class OpenApiConfig {
 
   @Bean

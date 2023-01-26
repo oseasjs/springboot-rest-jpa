@@ -27,6 +27,7 @@ public class CommentControllerTest extends AbstractControllerTest {
   private Post postMocked = new Post(BigDecimal.ONE.longValue(), TITLE, CONTENT, now, GeneratedTypeEnum.MANUAL);
   private Comment commentMocked = new Comment(BigDecimal.ONE.longValue(), CONTENT, AUTHOR, now, GeneratedTypeEnum.MANUAL, postMocked);
 
+//  @WithMockUser("spring")
   @Test
   public void shouldReturnFoundCommentsSuccessfully() throws Exception {
 
@@ -44,6 +45,7 @@ public class CommentControllerTest extends AbstractControllerTest {
 
   }
 
+//  @WithMockUser("spring")
   @Test
   public void shouldAddCommentSuccessfully() throws Exception {
 
@@ -63,6 +65,7 @@ public class CommentControllerTest extends AbstractControllerTest {
     ;
   }
 
+//  @WithMockUser("spring")
   @Test
   public void shouldAddCommentMissingContentSuccessfully() throws Exception {
     Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
@@ -76,6 +79,7 @@ public class CommentControllerTest extends AbstractControllerTest {
       .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))));
   }
 
+//  @WithMockUser("spring")
   @Test
   public void shouldAddCommentMissingAuthorSuccessfully() throws Exception {
     Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
@@ -89,6 +93,7 @@ public class CommentControllerTest extends AbstractControllerTest {
       .andExpect(jsonPath("$.validationMessage.author", containsString(requiredMsg("Author"))));
   }
 
+//  @WithMockUser("spring")
   @Test
   public void shouldAddCommentMissingCreationSuccessfully() throws Exception {
     Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
@@ -102,6 +107,7 @@ public class CommentControllerTest extends AbstractControllerTest {
       .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
   }
 
+//  @WithMockUser("spring")
   @Test
   public void shouldAddCommentMissingAllFieldsSuccessfully() throws Exception {
     mockMvc.perform(post("/v1/posts/1/comments")
@@ -114,6 +120,7 @@ public class CommentControllerTest extends AbstractControllerTest {
       .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
   }
 
+//  @WithMockUser("spring")
   @Test
   public void shouldAddRemoteCommentsSuccessfully() throws Exception {
     when(jsonPlaceHolderClient.getComments(any()))
@@ -137,6 +144,7 @@ public class CommentControllerTest extends AbstractControllerTest {
       .andExpect(status().isCreated());
   }
 
+//  @WithMockUser("spring")
   @Test
   public void shouldAddRemoteCommentsMissingLimitSuccessfully() throws Exception {
     mockMvc.perform(post("/v1/posts/1/comments/remotes")

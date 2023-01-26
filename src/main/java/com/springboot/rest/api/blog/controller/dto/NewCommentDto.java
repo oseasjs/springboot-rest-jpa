@@ -15,15 +15,20 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 public class NewCommentDto {
+
   @JsonIgnore
-  @Getter
+//  @Getter
   private final GeneratedTypeEnum generatedType = GeneratedTypeEnum.MANUAL;
+
   @NotBlank(message = "Content is required")
   private String content;
+
   @NotBlank(message = "Author is required")
   private String author;
+
   @NotNull(message = "Creation Date is required")
   private LocalDateTime creationDate;
+
   @JsonIgnore
   @Setter
   private Long postId;

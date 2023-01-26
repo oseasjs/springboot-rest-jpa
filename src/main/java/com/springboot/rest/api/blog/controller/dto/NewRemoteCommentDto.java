@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class RemoteCommentDto {
+public class NewRemoteCommentDto {
   @NotNull
   private Integer limit;
 }

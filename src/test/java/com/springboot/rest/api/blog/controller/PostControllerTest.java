@@ -24,6 +24,7 @@ public class PostControllerTest extends AbstractControllerTest {
 
   private Post postMocked = new Post(BigDecimal.ONE.longValue(), TITLE, CONTENT, now, GeneratedTypeEnum.MANUAL);
 
+//  @WithMockUser("spring")
   @Test
   public void shouldReturnFoundPostSuccessfully() throws Exception {
 
@@ -40,6 +41,7 @@ public class PostControllerTest extends AbstractControllerTest {
 
   }
 
+//  @WithMockUser("spring")
   @Test
   public void shouldAddPostSuccessfully() throws Exception {
 

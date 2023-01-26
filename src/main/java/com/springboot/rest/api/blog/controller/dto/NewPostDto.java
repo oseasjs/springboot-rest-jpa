@@ -15,12 +15,15 @@ import java.time.LocalDateTime;
 @Getter
 public class NewPostDto {
   @JsonIgnore
-  @Getter
+//  @Getter
   private final GeneratedTypeEnum generatedType = GeneratedTypeEnum.MANUAL;
+
   @NotBlank(message = "Title is required")
   private String title;
+
   @NotBlank(message = "Content is required")
   private String content;
+
   @NotNull(message = "Creation Date is required")
   private LocalDateTime creationDate;
 }

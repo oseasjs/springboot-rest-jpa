@@ -2,7 +2,7 @@ package com.springboot.rest.api.blog.controller;
 
 import com.springboot.rest.api.blog.controller.dto.CommentDto;
 import com.springboot.rest.api.blog.controller.dto.NewCommentDto;
-import com.springboot.rest.api.blog.controller.dto.RemoteCommentDto;
+import com.springboot.rest.api.blog.controller.dto.NewRemoteCommentDto;
 import com.springboot.rest.api.blog.controller.mapper.CommentMapper;
 import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderService;
 import com.springboot.rest.api.blog.service.CommentService;
@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/posts/{postId}/comments")
+@SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Comments API")
 @AllArgsConstructor
 @Slf4j
@@ -77,9 +79,9 @@ public class CommentController {
   })
   @PostMapping("/remotes")
   @ResponseStatus(HttpStatus.CREATED)
-  public void addRemoteComments(@PathVariable Long postId, @Valid @RequestBody RemoteCommentDto remoteCommentDto) {
-    log.debug("Adding {} comments with postId {} from Json Place Holder", remoteCommentDto.getLimit(), postId);
-    jsonPlaceHolderService.addRemoteComments(postId, remoteCommentDto);
+  public void addRemoteComments(@PathVariable Long postId, @Valid @RequestBody NewRemoteCommentDto newRemoteCommentDto) {
+    log.debug("Adding {} comments with postId {} from Json Place Holder", newRemoteCommentDto.getLimit(), postId);
+    jsonPlaceHolderService.addRemoteComments(postId, newRemoteCommentDto);
   }
 
 }

@@ -1,7 +1,7 @@
 package com.springboot.rest.api.blog.service;
 
-import com.springboot.rest.api.blog.controller.dto.RemoteCommentDto;
-import com.springboot.rest.api.blog.controller.dto.RemotePostDto;
+import com.springboot.rest.api.blog.controller.dto.NewRemoteCommentDto;
+import com.springboot.rest.api.blog.controller.dto.NewRemotePostDto;
 import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
 import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderClient;
 import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderService;
@@ -78,7 +78,7 @@ public class JsonPlaceHolderServiceTest {
       );
 
     jsonPlaceHolderService.addRemotePosts(
-      RemotePostDto
+      NewRemotePostDto
         .builder()
         .limit(1)
         .build()
@@ -116,7 +116,7 @@ public class JsonPlaceHolderServiceTest {
 
     jsonPlaceHolderService.addRemoteComments(
       existingPost.getId(),
-      RemoteCommentDto
+      NewRemoteCommentDto
         .builder()
         .limit(1)
         .build()

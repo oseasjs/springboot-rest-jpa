@@ -2,7 +2,7 @@ package com.springboot.rest.api.blog.controller;
 
 import com.springboot.rest.api.blog.controller.dto.NewPostDto;
 import com.springboot.rest.api.blog.controller.dto.PostDto;
-import com.springboot.rest.api.blog.controller.dto.RemotePostDto;
+import com.springboot.rest.api.blog.controller.dto.NewRemotePostDto;
 import com.springboot.rest.api.blog.controller.mapper.PostMapper;
 import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderService;
 import com.springboot.rest.api.blog.service.PostService;
@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/v1/posts")
 @Tag(name = "Post API")
+@SecurityRequirement(name = "Bearer Authentication")
 @AllArgsConstructor
 @Slf4j
 public class PostController {
@@ -69,9 +71,9 @@ public class PostController {
   })
   @PostMapping("/remotes")
   @ResponseStatus(HttpStatus.CREATED)
-  public void addRemotePosts(@Valid @RequestBody RemotePostDto remotePostDto) {
-    log.debug("Adding {} posts from Json Place Holder", remotePostDto.getLimit());
-    jsonPlaceHolderService.addRemotePosts(remotePostDto);
+  public void addRemotePosts(@Valid @RequestBody NewRemotePostDto newRemotePostDto) {
+    log.debug("Adding {} posts from Json Place Holder", newRemotePostDto.getLimit());
+    jsonPlaceHolderService.addRemotePosts(newRemotePostDto);
   }
 
 }

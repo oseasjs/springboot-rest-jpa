@@ -24,6 +24,7 @@ Blog application to add/get Posts and Comments;
 - Spring Validation;
 - Spring Actuator;
 - Spring OpenFeign;
+- Spring Security 6;
 - SpringDoc OpenAPI;
 - Hibernate Envers;
 - Global Exception Handler;
@@ -42,6 +43,5 @@ Blog application to add/get Posts and Comments;
 
 - Resilient4J
 - ActiveMQ
-- Spring Security JWT
 - Micrometer
-
+- Keycloak: https://github.com/eazybytes/springsecurity6
