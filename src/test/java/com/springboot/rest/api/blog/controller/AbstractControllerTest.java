@@ -1,7 +1,16 @@
 package com.springboot.rest.api.blog.controller;
 
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-
+import com.springboot.rest.api.blog.BaseBlogTest;
+import com.springboot.rest.api.blog.configuration.SecurityConfig;
+import com.springboot.rest.api.blog.exception.UnauthorizedHandler;
+import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderClient;
+import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderService;
+import com.springboot.rest.api.blog.security.JwtAuthenticationFilter;
+import com.springboot.rest.api.blog.security.JwtUtils;
+import com.springboot.rest.api.blog.service.CommentService;
+import com.springboot.rest.api.blog.service.PostService;
+import com.springboot.rest.api.blog.service.UserDetailsService;
+import com.springboot.rest.api.blog.util.JsonUtil;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -14,18 +23,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderClient;
-import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderService;
-import com.springboot.rest.api.blog.security.JwtFilter;
-import com.springboot.rest.api.blog.security.JwtUtils;
-import com.springboot.rest.api.blog.service.CommentService;
-import com.springboot.rest.api.blog.service.PostService;
-import com.springboot.rest.api.blog.service.UserDetailsService;
-import com.springboot.rest.api.blog.util.JsonUtil;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 @WebMvcTest
-@Import({JsonUtil.class, JwtUtils.class, JwtFilter.class})
-public abstract class AbstractControllerTest {
+@Import({JsonUtil.class, JwtUtils.class, JwtAuthenticationFilter.class, SecurityConfig.class, UnauthorizedHandler.class})
+public abstract class AbstractControllerTest extends BaseBlogTest {
 
   @Autowired // Remove this annotation DI
   protected MockMvc mockMvc;

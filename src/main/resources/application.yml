@@ -30,6 +30,10 @@ spring:
     default-schema: blog
 #    enabled: false
 
+security:
+  jwt:
+    secret-key: mysecret
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

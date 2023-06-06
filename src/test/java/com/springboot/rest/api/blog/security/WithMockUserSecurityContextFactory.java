@@ -1,17 +1,14 @@
 package com.springboot.rest.api.blog.security;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import com.springboot.rest.api.blog.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
-import com.springboot.rest.api.blog.model.User;
+import java.util.Arrays;
+import java.util.List;
 
 public class WithMockUserSecurityContextFactory implements WithSecurityContextFactory<WithMockUserSecurity> {
 
@@ -22,13 +19,13 @@ public class WithMockUserSecurityContextFactory implements WithSecurityContextFa
             .map(SimpleGrantedAuthority::new)
             .toList();
         
-        UserDetails principal = User
+        User principal = User
             .builder()
-            .id(annotation.userId())
+            .username(annotation.username())
             .build();
 
         var context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(new AnonymousAuthenticationToken(null, principal, authorities));
+        context.setAuthentication(new UserAuthenticationToken(principal));
 
         return context;
 

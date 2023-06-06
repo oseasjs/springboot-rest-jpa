@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,7 +20,7 @@ import java.util.Collections;
   indexes = {@Index(name = "user_index", columnList = "username", unique = true)}
 )
 @Audited
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

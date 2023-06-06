@@ -1,5 +1,25 @@
 package com.springboot.rest.api.blog.service;
 
+import static com.springboot.rest.api.blog.utils.TestUtils.AUTHOR;
+import static com.springboot.rest.api.blog.utils.TestUtils.CONTENT;
+import static com.springboot.rest.api.blog.utils.TestUtils.TITLE;
+import static com.springboot.rest.api.blog.utils.TestUtils.now;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.UUID;
+
+import com.springboot.rest.api.blog.BaseBlogTest;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
 import com.springboot.rest.api.blog.controller.dto.NewRemoteCommentDto;
 import com.springboot.rest.api.blog.controller.dto.NewRemotePostDto;
 import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
@@ -11,38 +31,23 @@ import com.springboot.rest.api.blog.model.Comment;
 import com.springboot.rest.api.blog.model.Post;
 import com.springboot.rest.api.blog.repository.CommentRepository;
 import com.springboot.rest.api.blog.repository.PostRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
-import java.util.List;
-import java.util.UUID;
-
-import static com.springboot.rest.api.blog.utils.TestUtils.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class JsonPlaceHolderServiceTest {
-
-  private final Post postMocked = new Post(null, TITLE, CONTENT, now, GeneratedTypeEnum.MANUAL);
+public class JsonPlaceHolderServiceTest extends BaseBlogTest {
 
   @MockBean
   protected JsonPlaceHolderClient jsonPlaceHolderClient;
 
   @Autowired
   private JsonPlaceHolderService jsonPlaceHolderService;
-  @Autowired
-  private PostService postService;
+    
   @Autowired
   private PostRepository postRepository;
+  
   @Autowired
   private CommentRepository commentRepository;
+
+  private final Post postMocked = new Post(null, TITLE + " JsonPlaceHolder", CONTENT, now, GeneratedTypeEnum.MANUAL);
   private Post existingPost;
 
   @BeforeEach
@@ -60,6 +65,7 @@ public class JsonPlaceHolderServiceTest {
       .findAll()
       .forEach(p -> postRepository.delete(p));
   }
+
 
   @Test
   public void getRemotePostsSuccessfully() {

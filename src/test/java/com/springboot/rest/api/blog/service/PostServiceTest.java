@@ -1,5 +1,6 @@
 package com.springboot.rest.api.blog.service;
 
+import com.springboot.rest.api.blog.BaseBlogTest;
 import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
 import com.springboot.rest.api.blog.exception.NotFoundException;
 import com.springboot.rest.api.blog.model.Post;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest
-public class PostServiceTest {
+public class PostServiceTest extends BaseBlogTest {
 
   @Autowired
   private PostRepository postRepository;
@@ -28,7 +29,7 @@ public class PostServiceTest {
   private PostService postService;
 
   private Post existingPost;
-  private Post postMocked = new Post(null, TITLE, CONTENT, now, GeneratedTypeEnum.MANUAL);
+  private Post postMocked = new Post(null, TITLE + "Post", CONTENT, now, GeneratedTypeEnum.MANUAL);
 
   @BeforeEach
   public void setup() {

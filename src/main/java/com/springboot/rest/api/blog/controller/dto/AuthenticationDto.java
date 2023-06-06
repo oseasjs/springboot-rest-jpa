@@ -1,10 +1,10 @@
 package com.springboot.rest.api.blog.controller.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class AuthenticationDto {
 

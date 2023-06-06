@@ -1,20 +1,16 @@
 package com.springboot.rest.api.blog.controller;
 
-import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
-import com.springboot.rest.api.blog.feign.client.dto.JsonPlaceHolderCommentDto;
-import com.springboot.rest.api.blog.model.Comment;
-import com.springboot.rest.api.blog.model.Post;
-import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.security.test.context.support.WithMockUser;
-
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.springboot.rest.api.blog.utils.TestUtils.*;
-import static org.hamcrest.Matchers.*;
+import static com.springboot.rest.api.blog.utils.TestUtils.AUTHOR;
+import static com.springboot.rest.api.blog.utils.TestUtils.CONTENT;
+import static com.springboot.rest.api.blog.utils.TestUtils.TITLE;
+import static com.springboot.rest.api.blog.utils.TestUtils.formatDate;
+import static com.springboot.rest.api.blog.utils.TestUtils.newCommentDtoAsMap;
+import static com.springboot.rest.api.blog.utils.TestUtils.newRemoteCommentDtoAsMap;
+import static com.springboot.rest.api.blog.utils.TestUtils.now;
+import static com.springboot.rest.api.blog.utils.TestUtils.requiredMsg;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -22,6 +18,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.test.context.support.WithMockUser;
+
+import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
+import com.springboot.rest.api.blog.feign.client.dto.JsonPlaceHolderCommentDto;
+import com.springboot.rest.api.blog.model.Comment;
+import com.springboot.rest.api.blog.model.Post;
 
 public class CommentControllerTest extends AbstractControllerTest {
 
@@ -35,7 +45,7 @@ public class CommentControllerTest extends AbstractControllerTest {
       .andExpect(status().isUnauthorized());
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldReturnFoundCommentsSuccessfully() throws Exception {
 
@@ -53,7 +63,7 @@ public class CommentControllerTest extends AbstractControllerTest {
 
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldAddCommentSuccessfully() throws Exception {
 
@@ -73,7 +83,7 @@ public class CommentControllerTest extends AbstractControllerTest {
     ;
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldAddCommentMissingContentSuccessfully() throws Exception {
     Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
@@ -87,7 +97,7 @@ public class CommentControllerTest extends AbstractControllerTest {
       .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))));
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldAddCommentMissingAuthorSuccessfully() throws Exception {
     Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
@@ -101,7 +111,7 @@ public class CommentControllerTest extends AbstractControllerTest {
       .andExpect(jsonPath("$.validationMessage.author", containsString(requiredMsg("Author"))));
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldAddCommentMissingCreationSuccessfully() throws Exception {
     Map<String, Object> newPostDtoMap = newCommentDtoAsMap();
@@ -115,7 +125,7 @@ public class CommentControllerTest extends AbstractControllerTest {
       .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldAddCommentMissingAllFieldsSuccessfully() throws Exception {
     mockMvc.perform(post("/v1/posts/1/comments")
@@ -128,7 +138,7 @@ public class CommentControllerTest extends AbstractControllerTest {
       .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldAddRemoteCommentsSuccessfully() throws Exception {
     when(jsonPlaceHolderClient.getComments(any()))
@@ -152,7 +162,7 @@ public class CommentControllerTest extends AbstractControllerTest {
       .andExpect(status().isCreated());
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldAddRemoteCommentsMissingLimitSuccessfully() throws Exception {
     mockMvc.perform(post("/v1/posts/1/comments/remotes")

@@ -1,9 +1,5 @@
 package com.springboot.rest.api.blog.configuration;
 
-import com.springboot.rest.api.blog.exception.UnauthorizedHandler;
-import com.springboot.rest.api.blog.security.JwtFilter;
-import com.springboot.rest.api.blog.service.UserDetailsService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +13,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
+
+import com.springboot.rest.api.blog.exception.UnauthorizedHandler;
+import com.springboot.rest.api.blog.security.JwtAuthenticationFilter;
+import com.springboot.rest.api.blog.service.UserDetailsService;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
@@ -24,36 +27,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
   private final UserDetailsService userDetailsService;
-
-  private final JwtFilter jwtFilter;
-
-  private UnauthorizedHandler unauthorizedHandler;
-
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-    http
-      .csrf().disable()
-      .headers().frameOptions().disable()
-      .and()
-      .authorizeHttpRequests()
-      .requestMatchers(
-        "/h2-console/**",
-        "/**/auth/**",
-        "/swagger-*/**",
-        "/v3/api-docs/**")
-        .permitAll()
-      .anyRequest().authenticated()
-      .and()
-      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-      .and()
-      .exceptionHandling()
-      .authenticationEntryPoint(unauthorizedHandler)
-      .and()
-      .authenticationProvider(authenticationProvider())
-      .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-    return http.build();
-  }
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
+  private final UnauthorizedHandler unauthorizedHandler;
 
   @Bean
   public AuthenticationProvider authenticationProvider() {
@@ -66,6 +41,39 @@ public class SecurityConfig {
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public SecurityFilterChain applicationSecurity(HttpSecurity http) throws Exception {
+
+    http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+    http
+        .headers().frameOptions().disable()
+        .and()
+        .cors().disable()
+        .csrf().disable()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .formLogin().disable()
+        .exceptionHandling()
+          .authenticationEntryPoint(unauthorizedHandler)
+          .and()
+        .securityMatcher("/**")
+        .authorizeHttpRequests(registry -> registry
+            .requestMatchers(
+                "/h2-console/**",
+                "/**/auth/**",
+                "/swagger-*/**",
+                "/v3/api-docs/**"
+            )
+            .permitAll()
+            .anyRequest()
+            .authenticated()
+//            .hasRole("USER")
+        );
+
+    return http.build();
   }
 
   @Bean

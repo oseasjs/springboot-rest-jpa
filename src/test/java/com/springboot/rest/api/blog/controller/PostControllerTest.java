@@ -1,13 +1,18 @@
 package com.springboot.rest.api.blog.controller;
 
-import static com.springboot.rest.api.blog.utils.TestUtils.CONTENT;
-import static com.springboot.rest.api.blog.utils.TestUtils.NEW_POST_DTO_MOCKED;
-import static com.springboot.rest.api.blog.utils.TestUtils.TITLE;
-import static com.springboot.rest.api.blog.utils.TestUtils.formatDate;
-import static com.springboot.rest.api.blog.utils.TestUtils.newPostDtoAsMap;
-import static com.springboot.rest.api.blog.utils.TestUtils.newRemotePostDtoAsMap;
-import static com.springboot.rest.api.blog.utils.TestUtils.now;
-import static com.springboot.rest.api.blog.utils.TestUtils.requiredMsg;
+import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
+import com.springboot.rest.api.blog.feign.client.dto.JsonPlaceHolderPostDto;
+import com.springboot.rest.api.blog.model.Post;
+import org.junit.jupiter.api.Test;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.springboot.rest.api.blog.utils.TestUtils.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,23 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-
-import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
-import com.springboot.rest.api.blog.feign.client.dto.JsonPlaceHolderPostDto;
-import com.springboot.rest.api.blog.model.Post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class PostControllerTest extends AbstractControllerTest {
 
@@ -45,7 +34,7 @@ public class PostControllerTest extends AbstractControllerTest {
       .andExpect(status().isUnauthorized());
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void loggedIn_shouldExecuteGetPostEndpoint() throws Exception {
     mockMvc.perform(get("/v1/posts")
@@ -53,7 +42,7 @@ public class PostControllerTest extends AbstractControllerTest {
       .andExpect(status().isOk());
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldReturnFoundPostSuccessfully() throws Exception {
 
@@ -70,7 +59,7 @@ public class PostControllerTest extends AbstractControllerTest {
 
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldAddPostSuccessfully() throws Exception {
 
@@ -80,7 +69,6 @@ public class PostControllerTest extends AbstractControllerTest {
         .content(jsonUtil.mapToJson(newPostDtoAsMap()))
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON)
-        .with(SecurityMockMvcRequestPostProcessors.jwt())
       )
       .andExpect(status().isCreated())
       .andExpect(jsonPath("$.id", is(postMocked.getId().intValue())))
@@ -90,7 +78,7 @@ public class PostControllerTest extends AbstractControllerTest {
       .andExpect(jsonPath("$.generatedType", is(postMocked.getGeneratedType().toString())));
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldAddPostMissingTitleSuccessfully() throws Exception {
 
@@ -107,7 +95,7 @@ public class PostControllerTest extends AbstractControllerTest {
       .andExpect(jsonPath("$.validationMessage.title", containsString(requiredMsg("Title"))));
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldAddPostMissingContentSuccessfully() throws Exception {
 
@@ -124,7 +112,7 @@ public class PostControllerTest extends AbstractControllerTest {
       .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))));
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldAddPostMissingCreationDateSuccessfully() throws Exception {
 
@@ -141,7 +129,7 @@ public class PostControllerTest extends AbstractControllerTest {
       .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldAddPostMissingAllFieldDateSuccessfully() throws Exception {
 
@@ -159,7 +147,7 @@ public class PostControllerTest extends AbstractControllerTest {
       .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldAddRemotePostSuccessfully() throws Exception {
 
@@ -182,7 +170,7 @@ public class PostControllerTest extends AbstractControllerTest {
       .andExpect(status().isCreated());
   }
 
-  @WithMockUser("spring")
+  @WithMockUser
   @Test
   public void shouldAddRemotePostMissingLimitSuccessfully() throws Exception {
 

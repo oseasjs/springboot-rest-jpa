@@ -3,13 +3,11 @@ package com.springboot.rest.api.blog.model;
 import com.springboot.rest.api.blog.audit.AuditRevisionListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.DefaultRevisionEntity;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "revinfo", schema = "audit")
 @AttributeOverrides({

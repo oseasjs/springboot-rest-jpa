@@ -1,5 +1,6 @@
 package com.springboot.rest.api.blog.service;
 
+import com.springboot.rest.api.blog.BaseBlogTest;
 import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
 import com.springboot.rest.api.blog.exception.BlogBusinessException;
 import com.springboot.rest.api.blog.model.Comment;
@@ -22,16 +23,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
-public class CommentServiceTest {
+public class CommentServiceTest extends BaseBlogTest {
 
-  private final Post postMocked = new Post(null, TITLE, CONTENT, now, GeneratedTypeEnum.MANUAL);
   @Autowired
   PostRepository postRepository;
+  
   @Autowired
   CommentRepository commentRepository;
+  
   @Autowired
   CommentService commentService;
+  
   private Post existingPost;
+
+  private final Post postMocked = new Post(null, TITLE + " Comment", CONTENT, now, GeneratedTypeEnum.MANUAL);
   private Comment commentMocked = new Comment(null, CONTENT, AUTHOR, now, GeneratedTypeEnum.MANUAL, postMocked);
 
   @BeforeEach

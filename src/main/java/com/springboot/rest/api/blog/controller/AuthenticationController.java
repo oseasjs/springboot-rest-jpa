@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class AuthenticationController {
   })
   @PostMapping("/register")
   @ResponseStatus(HttpStatus.CREATED)
-  public UserDto register(@RequestBody final NewUserDto dto) {
+  public UserDto register(@Validated @RequestBody final NewUserDto dto) {
     return
       Optional
         .of(userService.save(UserMapper.INSTANCE.toEntity(dto)))
@@ -50,7 +51,7 @@ public class AuthenticationController {
   }
 
   @PostMapping("/authenticate")
-  public String authenticate(@RequestBody final AuthenticationDto dto) {
+  public String authenticate(@Validated @RequestBody final AuthenticationDto dto) {
     authenticationManager.authenticate(
       new UsernamePasswordAuthenticationToken(dto.getUsername(),dto.getPassword())
     );
