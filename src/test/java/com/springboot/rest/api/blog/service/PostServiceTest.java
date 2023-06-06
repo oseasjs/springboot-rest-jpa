@@ -44,7 +44,7 @@ public class PostServiceTest {
 
   @Test
   public void shouldReturnCreatedPostSuccessfully() {
-    Post post = postService.getPost(existingPost.getId());
+    Post post = postService.findById(existingPost.getId());
 
     assertNotNull(post, "Post shouldn't be null");
     assertEquals(post.getId(), existingPost.getId());
@@ -56,7 +56,7 @@ public class PostServiceTest {
   @Test
   public void shouldReturnExceptionForNotExistingPostSuccessfully() {
     Exception exception = Assertions.assertThrows(Exception.class, () -> {
-      postService.getPost(BigDecimal.ZERO.subtract(BigDecimal.ONE).longValue());
+      postService.findById(BigDecimal.ZERO.subtract(BigDecimal.ONE).longValue());
     });
 
     Assertions.assertEquals(NotFoundException.class, exception.getClass());
@@ -64,7 +64,7 @@ public class PostServiceTest {
 
   @Test
   public void shouldReturnPostForNotExistingPostSuccessfully() {
-    Post postFound = postService.getPost(existingPost.getId());
+    Post postFound = postService.findById(existingPost.getId());
 
     assertNotNull(postFound, "Post shouldn't be null");
     assertEquals(postFound.getId(), existingPost.getId());
@@ -76,7 +76,7 @@ public class PostServiceTest {
 
   @Test
   public void shouldCreatedPostSuccessfully() {
-    Long postId = postService.addPost(postMocked).getId();
+    Long postId = postService.add(postMocked).getId();
     assertNotNull(postId, "Post ID shouldn't be null");
   }
 

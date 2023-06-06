@@ -26,7 +26,7 @@ public class JsonPlaceHolderService {
       .filter(p -> !postService.existsByTitle(p.getTitle()))
       .limit(newRemotePostDto.getLimit())
       .map(PostMapper.INSTANCE::toEntity)
-      .forEach(postService::addPost);
+      .forEach(postService::add);
     log.debug("{} Posts saved from Json Place Holder", newRemotePostDto.getLimit());
   }
 

@@ -3,6 +3,7 @@ package com.springboot.rest.api.blog.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
@@ -20,6 +21,7 @@ import java.util.Collections;
 )
 @Audited
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends BaseAudit implements UserDetails {

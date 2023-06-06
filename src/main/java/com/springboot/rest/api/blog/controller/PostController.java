@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -30,6 +31,23 @@ public class PostController {
   private PostService postService;
   private JsonPlaceHolderService jsonPlaceHolderService;
 
+  @Operation(summary = "Get All Posts", responses = {
+    @ApiResponse(responseCode = "200",
+      description = "Ok",
+      content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class))
+    ),
+    @ApiResponse(responseCode = "400", description = "Bad Request")
+  })
+  @GetMapping
+  @ResponseStatus(HttpStatus.OK)
+  public List<PostDto> findAllPost() {
+    log.debug("Getting all post");
+    return Optional
+      .of(this.postService.findAll())
+      .map(PostMapper.INSTANCE::asDtoList)
+      .get();
+  }
+
   @Operation(summary = "Get Post by ID", responses = {
     @ApiResponse(responseCode = "200",
       description = "Ok",
@@ -39,10 +57,10 @@ public class PostController {
   })
   @GetMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public PostDto getPost(@PathVariable Long id) {
+  public PostDto findById(@PathVariable Long id) {
     log.debug("Getting post with id {}", id);
     return Optional
-      .of(this.postService.getPost(id))
+      .of(this.postService.findById(id))
       .map(PostMapper.INSTANCE::toDTO)
       .get();
   }
@@ -55,11 +73,11 @@ public class PostController {
   })
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public PostDto addPost(@Valid @RequestBody NewPostDto newPostDto) {
+  public PostDto add(@Valid @RequestBody NewPostDto newPostDto) {
     log.debug("Adding post");
     return PostMapper.INSTANCE.toDTO(
       this.postService
-        .addPost(PostMapper.INSTANCE.toEntity(newPostDto))
+        .add(PostMapper.INSTANCE.toEntity(newPostDto))
     );
   }
 

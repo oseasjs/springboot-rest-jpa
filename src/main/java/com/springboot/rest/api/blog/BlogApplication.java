@@ -25,9 +25,7 @@ public class BlogApplication implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
 
-    // Create default user in DB:
-    // username = username
-    // password = password
+    // Create default user in DB: username = username | password = password
     userDetailsService.save(
       new User(null, "username", "password")
     );
