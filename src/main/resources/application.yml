@@ -28,6 +28,19 @@ spring:
             default_schema: audit
   flyway:
     default-schema: blog
+#    enabled: false
+
+security:
+  jwt:
+    secret-key: mysecret
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    org.hibernate.envers.boot: ERROR
 
 management:
   endpoints:

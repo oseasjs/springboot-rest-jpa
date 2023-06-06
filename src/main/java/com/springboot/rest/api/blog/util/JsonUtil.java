@@ -13,10 +13,6 @@ public class JsonUtil {
   private ObjectMapper objectMapper;
 
   public String mapToJson(Map elements) {
-
-//    ObjectMapper objectMapper = new ObjectMapper();
-//    objectMapper.registerModule(new JavaTimeModule());
-
     try {
       return objectMapper.writeValueAsString(elements);
     } catch (Exception e) {

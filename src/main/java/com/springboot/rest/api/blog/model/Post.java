@@ -1,13 +1,14 @@
 package com.springboot.rest.api.blog.model;
 
 import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
-import com.sun.istack.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,10 +16,10 @@ import java.time.LocalDateTime;
   indexes = {@Index(name = "post_index", columnList = "title, content", unique = true)}
 )
 @Audited
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
 public class Post extends BaseAudit {
 
   @Id

@@ -1,46 +1,47 @@
 package com.springboot.rest.api.blog.utils;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.springboot.rest.api.blog.controller.dto.CommentDto;
 import com.springboot.rest.api.blog.controller.dto.NewCommentDto;
 import com.springboot.rest.api.blog.controller.dto.NewPostDto;
 import com.springboot.rest.api.blog.controller.dto.PostDto;
 import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-
 public abstract class TestUtils {
 
-    public static final LocalDateTime now = LocalDateTime.now();
-    public static final String TITLE = "title";
-    public static final String CONTENT = "content";
-    public static final String AUTHOR = "author";
+  public static final LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+  public static final String TITLE = "title";
+  public static final String CONTENT = "content";
+  public static final String AUTHOR = "author";
 
-    public static final NewPostDto NEW_POST_DTO_MOCKED = NewPostDto
-        .builder()
-        .title(TITLE)
-        .content(CONTENT)
-        .creationDate(now)
-        .build();
+  public static final NewPostDto NEW_POST_DTO_MOCKED = NewPostDto
+    .builder()
+    .title(TITLE)
+    .content(CONTENT)
+    .creationDate(now)
+    .build();
 
-    public static final PostDto POST_DTO_MOCKED = PostDto
-      .builder()
-      .id(BigDecimal.ONE.longValue())
-      .title(TITLE)
-      .content(CONTENT)
-      .creationDate(now)
-      .generatedType(GeneratedTypeEnum.MANUAL)
-        .build();
+  public static final PostDto POST_DTO_MOCKED = PostDto
+    .builder()
+    .id(BigDecimal.ONE.longValue())
+    .title(TITLE)
+    .content(CONTENT)
+    .creationDate(now)
+    .generatedType(GeneratedTypeEnum.MANUAL)
+    .build();
 
-    public static final NewCommentDto NEW_COMMENT_DTO_MOCKED = NewCommentDto
-        .builder()
-        .content(CONTENT)
-        .author(AUTHOR)
-        .creationDate(now)
-        .build();
+  public static final NewCommentDto NEW_COMMENT_DTO_MOCKED = NewCommentDto
+    .builder()
+    .content(CONTENT)
+    .author(AUTHOR)
+    .creationDate(now)
+    .build();
 
   public static final CommentDto COMMENT_DTO_MOCKED = CommentDto
     .builder()

@@ -4,6 +4,8 @@ import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
 import com.springboot.rest.api.blog.feign.client.dto.JsonPlaceHolderPostDto;
 import com.springboot.rest.api.blog.model.Post;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -13,7 +15,7 @@ import java.util.Map;
 import static com.springboot.rest.api.blog.utils.TestUtils.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,104 +26,128 @@ public class PostControllerTest extends AbstractControllerTest {
 
   private Post postMocked = new Post(BigDecimal.ONE.longValue(), TITLE, CONTENT, now, GeneratedTypeEnum.MANUAL);
 
-    @Test
-    public void shouldReturnFoundPostSuccessfully() throws Exception {
+  @WithAnonymousUser
+  @Test
+  public void notLoggedIn_shouldNotExecuteGetPostEndpoint() throws Exception {
+    mockMvc.perform(get("/v1/posts")
+        .accept(APPLICATION_JSON))
+      .andExpect(status().isUnauthorized());
+  }
 
-      when(postService.getPost(1L)).thenReturn(postMocked);
+  @WithMockUser
+  @Test
+  public void loggedIn_shouldExecuteGetPostEndpoint() throws Exception {
+    mockMvc.perform(get("/v1/posts")
+        .accept(APPLICATION_JSON))
+      .andExpect(status().isOk());
+  }
 
-      mockMvc.perform(get("/v1/posts/1").accept(APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(APPLICATION_JSON))
-        .andExpect(jsonPath("$.id", is(postMocked.getId().intValue())))
-        .andExpect(jsonPath("$.title", is(postMocked.getTitle())))
-        .andExpect(jsonPath("$.content", is(postMocked.getContent())))
-        .andExpect(jsonPath("$.creationDate", is(formatDate(postMocked.getCreationDate()))))
-        .andExpect(jsonPath("$.generatedType", is(postMocked.getGeneratedType().toString())));
+  @WithMockUser
+  @Test
+  public void shouldReturnFoundPostSuccessfully() throws Exception {
 
-    }
+    when(postService.findById(1L)).thenReturn(postMocked);
 
-    @Test
-    public void shouldAddPostSuccessfully() throws Exception {
+    mockMvc.perform(get("/v1/posts/1").accept(APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andExpect(content().contentType(APPLICATION_JSON))
+      .andExpect(jsonPath("$.id", is(postMocked.getId().intValue())))
+      .andExpect(jsonPath("$.title", is(postMocked.getTitle())))
+      .andExpect(jsonPath("$.content", is(postMocked.getContent())))
+      .andExpect(jsonPath("$.creationDate", is(formatDate(postMocked.getCreationDate()))))
+      .andExpect(jsonPath("$.generatedType", is(postMocked.getGeneratedType().toString())));
 
-        when(postService.addPost(any())).thenReturn(postMocked);
+  }
 
-        mockMvc.perform(post("/v1/posts")
-            .content(jsonUtil.mapToJson(newPostDtoAsMap()))
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.id", is(postMocked.getId().intValue())))
-            .andExpect(jsonPath("$.title", is(postMocked.getTitle())))
-            .andExpect(jsonPath("$.content", is(postMocked.getContent())))
-            .andExpect(jsonPath("$.creationDate", is(formatDate(postMocked.getCreationDate()))))
-            .andExpect(jsonPath("$.generatedType", is(postMocked.getGeneratedType().toString())));
-    }
+  @WithMockUser
+  @Test
+  public void shouldAddPostSuccessfully() throws Exception {
 
-    @Test
-    public void shouldAddPostMissingTitleSuccessfully() throws Exception {
+    when(postService.add(any())).thenReturn(postMocked);
 
-        when(postService.addPost(any())).thenReturn(postMocked);
+    mockMvc.perform(post("/v1/posts")
+        .content(jsonUtil.mapToJson(newPostDtoAsMap()))
+        .contentType(APPLICATION_JSON)
+        .accept(APPLICATION_JSON)
+      )
+      .andExpect(status().isCreated())
+      .andExpect(jsonPath("$.id", is(postMocked.getId().intValue())))
+      .andExpect(jsonPath("$.title", is(postMocked.getTitle())))
+      .andExpect(jsonPath("$.content", is(postMocked.getContent())))
+      .andExpect(jsonPath("$.creationDate", is(formatDate(postMocked.getCreationDate()))))
+      .andExpect(jsonPath("$.generatedType", is(postMocked.getGeneratedType().toString())));
+  }
 
-        Map<String, Object> newPostDtoMap = newPostDtoAsMap();
-        newPostDtoMap.remove("title");
+  @WithMockUser
+  @Test
+  public void shouldAddPostMissingTitleSuccessfully() throws Exception {
 
-        mockMvc.perform(post("/v1/posts")
-            .content(jsonUtil.mapToJson(newPostDtoMap))
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.validationMessage.title", containsString(requiredMsg("Title"))));
-    }
+    when(postService.add(any())).thenReturn(postMocked);
 
-    @Test
-    public void shouldAddPostMissingContentSuccessfully() throws Exception {
+    Map<String, Object> newPostDtoMap = newPostDtoAsMap();
+    newPostDtoMap.remove("title");
 
-        when(postService.addPost(any())).thenReturn(postMocked);
+    mockMvc.perform(post("/v1/posts")
+        .content(jsonUtil.mapToJson(newPostDtoMap))
+        .contentType(APPLICATION_JSON)
+        .accept(APPLICATION_JSON))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.validationMessage.title", containsString(requiredMsg("Title"))));
+  }
 
-        Map<String, Object> newPostDtoMap = newPostDtoAsMap();
-        newPostDtoMap.remove("content");
+  @WithMockUser
+  @Test
+  public void shouldAddPostMissingContentSuccessfully() throws Exception {
 
-        mockMvc.perform(post("/v1/posts")
-            .content(jsonUtil.mapToJson(newPostDtoMap))
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))));
-    }
+    when(postService.add(any())).thenReturn(postMocked);
 
-    @Test
-    public void shouldAddPostMissingCreationDateSuccessfully() throws Exception {
+    Map<String, Object> newPostDtoMap = newPostDtoAsMap();
+    newPostDtoMap.remove("content");
 
-        when(postService.addPost(any())).thenReturn(postMocked);
+    mockMvc.perform(post("/v1/posts")
+        .content(jsonUtil.mapToJson(newPostDtoMap))
+        .contentType(APPLICATION_JSON)
+        .accept(APPLICATION_JSON))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))));
+  }
 
-        Map<String, Object> newPostDtoMap = newPostDtoAsMap();
-        newPostDtoMap.remove("creationDate");
+  @WithMockUser
+  @Test
+  public void shouldAddPostMissingCreationDateSuccessfully() throws Exception {
 
-        mockMvc.perform(post("/v1/posts")
-            .content(jsonUtil.mapToJson(newPostDtoMap))
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
-    }
+    when(postService.add(any())).thenReturn(postMocked);
 
-    @Test
-    public void shouldAddPostMissingAllFieldDateSuccessfully() throws Exception {
+    Map<String, Object> newPostDtoMap = newPostDtoAsMap();
+    newPostDtoMap.remove("creationDate");
 
-      when(postService.addPost(any())).thenReturn(postMocked);
+    mockMvc.perform(post("/v1/posts")
+        .content(jsonUtil.mapToJson(newPostDtoMap))
+        .contentType(APPLICATION_JSON)
+        .accept(APPLICATION_JSON))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
+  }
 
-      Map<String, Object> newPostDtoMap = new HashMap<>();
+  @WithMockUser
+  @Test
+  public void shouldAddPostMissingAllFieldDateSuccessfully() throws Exception {
 
-      mockMvc.perform(post("/v1/posts")
-          .content(jsonUtil.mapToJson(newPostDtoMap))
-          .contentType(APPLICATION_JSON)
-          .accept(APPLICATION_JSON))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.validationMessage.title", containsString(requiredMsg("Title"))))
-        .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))))
-        .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
-    }
+    when(postService.add(any())).thenReturn(postMocked);
 
+    Map<String, Object> newPostDtoMap = new HashMap<>();
+
+    mockMvc.perform(post("/v1/posts")
+        .content(jsonUtil.mapToJson(newPostDtoMap))
+        .contentType(APPLICATION_JSON)
+        .accept(APPLICATION_JSON))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.validationMessage.title", containsString(requiredMsg("Title"))))
+      .andExpect(jsonPath("$.validationMessage.content", containsString(requiredMsg("Content"))))
+      .andExpect(jsonPath("$.validationMessage.creationDate", containsString(requiredMsg("Creation Date"))));
+  }
+
+  @WithMockUser
   @Test
   public void shouldAddRemotePostSuccessfully() throws Exception {
 
@@ -135,7 +161,7 @@ public class PostControllerTest extends AbstractControllerTest {
             .build()
         )
       );
-    when(postService.addPost(any())).thenReturn(postMocked);
+    when(postService.add(any())).thenReturn(postMocked);
 
     mockMvc.perform(post("/v1/posts/remotes")
         .content(jsonUtil.mapToJson(newRemotePostDtoAsMap()))
@@ -144,6 +170,7 @@ public class PostControllerTest extends AbstractControllerTest {
       .andExpect(status().isCreated());
   }
 
+  @WithMockUser
   @Test
   public void shouldAddRemotePostMissingLimitSuccessfully() throws Exception {
 
