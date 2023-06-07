@@ -28,7 +28,25 @@ spring:
             default_schema: audit
   flyway:
     default-schema: blog
-#    enabled: false
+  kafka:
+    bootstrap-servers: ${kafka_bootstrap_servers:localhost:29092}
+    consumer:
+      client-id: springboot-kafka
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      max-poll-records: 1
+      fetch-max-wait: 36000
+      enable-auto-commit: false
+    producer:
+      client-id: springboot-kafka
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 3
+    listener:
+      poll-timeout: 1800000
+      concurrency: 1
+      ack-mode: manual_immediate
 
 security:
   jwt:
@@ -41,6 +59,7 @@ springdoc:
 logging:
   level:
     org.hibernate.envers.boot: ERROR
+    org.apache.kafka.clients: ERROR
 
 management:
   endpoints:

@@ -40,4 +40,10 @@ public class Post extends BaseAudit {
   @Enumerated(EnumType.STRING)
   private GeneratedTypeEnum generatedType;
 
+  @Column
+  private LocalDateTime moderationDate;
+
+  @Column
+  private String moderationReason;
+
 }

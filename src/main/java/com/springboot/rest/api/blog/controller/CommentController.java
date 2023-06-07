@@ -1,10 +1,15 @@
 package com.springboot.rest.api.blog.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.rest.api.blog.controller.dto.CommentDto;
 import com.springboot.rest.api.blog.controller.dto.NewCommentDto;
 import com.springboot.rest.api.blog.controller.dto.NewRemoteCommentDto;
 import com.springboot.rest.api.blog.controller.mapper.CommentMapper;
+import com.springboot.rest.api.blog.enums.KafkaTopicEnum;
 import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderService;
+import com.springboot.rest.api.blog.kafka.dto.NewRemoteCommentAsyncDto;
+import com.springboot.rest.api.blog.kafka.producer.KafkaProducerService;
 import com.springboot.rest.api.blog.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/posts/{postId}/comments")
@@ -32,6 +38,8 @@ public class CommentController {
 
   private CommentService commentService;
   private JsonPlaceHolderService jsonPlaceHolderService;
+  private KafkaProducerService kafkaProducerService;
+  private ObjectMapper objectMapper;
 
   @Operation(summary = "Get All Comments from a Post", responses = {
     @ApiResponse(responseCode = "200",
@@ -82,6 +90,22 @@ public class CommentController {
   public void addRemoteComments(@PathVariable Long postId, @Valid @RequestBody NewRemoteCommentDto newRemoteCommentDto) {
     log.debug("Adding {} comments with postId {} from Json Place Holder", newRemoteCommentDto.getLimit(), postId);
     jsonPlaceHolderService.addRemoteComments(postId, newRemoteCommentDto);
+  }
+
+  @Operation(summary = "Add new Comments on existing Posts from Json Place Holder public API ASYNCHRONOUS", responses = {
+          @ApiResponse(responseCode = "201",
+                  description = "Ok",
+                  content = @Content(mediaType = "application/json")),
+          @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)
+  })
+  @PostMapping("/remotes/async")
+  @ResponseStatus(HttpStatus.CREATED)
+  public void addRemoteCommentAsync(@PathVariable Long postId, @Valid @RequestBody NewRemoteCommentDto newRemoteCommentDto) throws JsonProcessingException {
+    log.debug("Adding {} comments with postId {} from Json Place Holder Async", newRemoteCommentDto.getLimit(), postId);
+    NewRemoteCommentAsyncDto commentAsyncDto = new NewRemoteCommentAsyncDto(postId, newRemoteCommentDto);
+    String message = objectMapper.writeValueAsString(commentAsyncDto);
+    String key = UUID.randomUUID().toString();
+    kafkaProducerService.sendMessage(KafkaTopicEnum.COMMENT, key, message);
   }
 
 }

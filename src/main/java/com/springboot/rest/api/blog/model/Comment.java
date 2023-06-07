@@ -59,4 +59,10 @@ public class Comment extends BaseAudit {
   @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
   private Post post;
 
+  @Column
+  private LocalDateTime moderationDate;
+
+  @Column
+  private String moderationReason;
+
 }

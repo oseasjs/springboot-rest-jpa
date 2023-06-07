@@ -70,10 +70,10 @@ http://localhost:8080/swagger-ui/index.html
 - Docker;
 - Github Action;
 - CodeCov;
+- Kafka;
+- Scheduler;
 
 ### TODO
 
 - Resilient4J
-- ActiveMQ
-- Micrometer
 - Keycloak: https://github.com/eazybytes/springsecurity6

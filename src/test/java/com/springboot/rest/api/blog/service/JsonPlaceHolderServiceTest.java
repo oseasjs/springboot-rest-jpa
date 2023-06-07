@@ -47,7 +47,7 @@ public class JsonPlaceHolderServiceTest extends BaseBlogTest {
   @Autowired
   private CommentRepository commentRepository;
 
-  private final Post postMocked = new Post(null, TITLE + " JsonPlaceHolder", CONTENT, now, GeneratedTypeEnum.MANUAL);
+  private final Post postMocked = new Post(null, TITLE + " JsonPlaceHolder", CONTENT, now, GeneratedTypeEnum.MANUAL, null, null);
   private Post existingPost;
 
   @BeforeEach

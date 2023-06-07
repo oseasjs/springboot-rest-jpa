@@ -1,10 +1,14 @@
 package com.springboot.rest.api.blog.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.rest.api.blog.controller.dto.NewPostDto;
-import com.springboot.rest.api.blog.controller.dto.PostDto;
 import com.springboot.rest.api.blog.controller.dto.NewRemotePostDto;
+import com.springboot.rest.api.blog.controller.dto.PostDto;
 import com.springboot.rest.api.blog.controller.mapper.PostMapper;
+import com.springboot.rest.api.blog.enums.KafkaTopicEnum;
 import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderService;
+import com.springboot.rest.api.blog.kafka.producer.KafkaProducerService;
 import com.springboot.rest.api.blog.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/posts")
@@ -30,6 +35,8 @@ import java.util.Optional;
 public class PostController {
   private PostService postService;
   private JsonPlaceHolderService jsonPlaceHolderService;
+  private KafkaProducerService kafkaProducerService;
+  private ObjectMapper objectMapper;
 
   @Operation(summary = "Get All Posts", responses = {
     @ApiResponse(responseCode = "200",
@@ -92,6 +99,21 @@ public class PostController {
   public void addRemotePosts(@Valid @RequestBody NewRemotePostDto newRemotePostDto) {
     log.debug("Adding {} posts from Json Place Holder", newRemotePostDto.getLimit());
     jsonPlaceHolderService.addRemotePosts(newRemotePostDto);
+  }
+
+  @Operation(summary = "Add news Posts from Json Place Holder public API ASYNCHRONOUSLY", responses = {
+          @ApiResponse(responseCode = "201",
+                  description = "Ok",
+                  content = @Content(mediaType = "application/json")),
+          @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)
+  })
+  @PostMapping("/remotes/async")
+  @ResponseStatus(HttpStatus.CREATED)
+  public void addRemotePostsAsync(@Valid @RequestBody NewRemotePostDto newRemotePostDto) throws JsonProcessingException {
+    log.debug("Adding {} posts from Json Place Holder Async", newRemotePostDto.getLimit());
+    String message = objectMapper.writeValueAsString(newRemotePostDto);
+    String key = UUID.randomUUID().toString();
+    kafkaProducerService.sendMessage(KafkaTopicEnum.POST, key, message);
   }
 
 }
