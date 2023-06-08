@@ -19,11 +19,12 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     generate-ddl: false
-    show-sql: false
+    show-sql: true
     properties:
       org:
         hibernate:
-          show_sql: false
+          show_sql: true
+          format_sql: true
           envers:
             default_schema: audit
   flyway:
@@ -72,5 +73,24 @@ management:
 
 jplaceholder:
   url: https://jsonplaceholder.typicode.com
+
+blog:
+  kafka:
+    post:
+      topic: POST
+      prefix: postConsumer
+      group-id: postConsumerGroupId
+    comment:
+      topic: COMMENT
+      prefix: commentConsumer
+      group-id: commentConsumerGroupId
+  moderation:
+    post:
+      fixed-rate: 15000 # Every 15 seconds
+    comment:
+      cron: 0/20 * * * * * # Every 20 seconds
+  cache:
+    ttl: 50000 # 50 seconds
+
 
 

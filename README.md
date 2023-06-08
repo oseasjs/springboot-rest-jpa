@@ -50,9 +50,10 @@ http://localhost:8080/swagger-ui/index.html
 - Java 17;
 - Maven;
 - Spring Boot 3;
-- Spring Cloud 2022;
+- Spring Cloud 2022.0.3;
 - Spring Web;
 - Spring Data;
+- Spring Cache;
 - Spring Validation;
 - Spring Actuator;
 - Spring OpenFeign;
@@ -68,10 +69,12 @@ http://localhost:8080/swagger-ui/index.html
 - MockMVC;
 - Sonar;
 - Docker;
+- Docker Compose;
 - Github Action;
 - CodeCov;
 - Kafka;
 - Scheduler;
+- Cache;
 
 ### TODO
 

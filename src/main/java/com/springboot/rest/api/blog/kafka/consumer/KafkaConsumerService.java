@@ -22,7 +22,9 @@ public class KafkaConsumerService {
     private JsonPlaceHolderService jsonPlaceHolderService;
     private ObjectMapper objectMapper;
 
-    @KafkaListener(topics = {"POST"}, clientIdPrefix = "postConsumer", groupId = "postConsumerGroupId")
+    @KafkaListener(topics = {"${blog.kafka.post.topic}"},
+            clientIdPrefix = "${blog.kafka.post.prefix}",
+            groupId = "${blog.kafka.post.group-id}")
     public void consumePost(final @Payload String message,
                             final @Header(KafkaHeaders.OFFSET) Integer offset,
                             final @Header(KafkaHeaders.RECEIVED_KEY) String key,
@@ -31,13 +33,16 @@ public class KafkaConsumerService {
                             final @Header(KafkaHeaders.RECEIVED_TIMESTAMP) long ts,
                             final Acknowledgment acknowledgment
     ) throws JsonProcessingException {
+        log.info("Post message consumed -> offset={}, key={}, partition={}, topic:{}, TIMESTAMP={}, postDto={}",
+                ts, offset, key, partition, topic, message);
         NewRemotePostDto postDto = objectMapper.readValue(message, NewRemotePostDto.class);
-        log.info("Post message consumed -> TIMESTAMP={}, offset={}, key={}, partition={}, topic:{}, postDto={}", ts, offset, key, partition, topic, postDto);
         jsonPlaceHolderService.addRemotePosts(postDto);
         acknowledgment.acknowledge();
     }
 
-    @KafkaListener(topics = {"COMMENT"}, clientIdPrefix = "commentConsumer", groupId = "commentConsumerGroupId")
+    @KafkaListener(topics = {"${blog.kafka.comment.topic}"},
+            clientIdPrefix = "${blog.kafka.comment.prefix}",
+            groupId = "${blog.kafka.comment.group-id}")
     public void consumeComment(final @Payload String message,
                               final @Header(KafkaHeaders.OFFSET) Integer offset,
                               final @Header(KafkaHeaders.RECEIVED_KEY) String key,
@@ -46,8 +51,9 @@ public class KafkaConsumerService {
                               final @Header(KafkaHeaders.RECEIVED_TIMESTAMP) long ts,
                               final Acknowledgment acknowledgment
     ) throws JsonProcessingException {
+        log.info("Comment message consumed -> offset={}, key={}, partition={}, topic:{}, TIMESTAMP={}, commentDto={}",
+                ts, offset, key, partition, topic, message);
         NewRemoteCommentAsyncDto commentDto = objectMapper.readValue(message, NewRemoteCommentAsyncDto.class);
-        log.info("Comment message consumed -> TIMESTAMP={}, offset={}, key={}, partition={}, topic:{}, commentDto={}", ts, offset, key, partition, topic, commentDto);
         jsonPlaceHolderService.addRemoteComments(commentDto.getPostId(), commentDto.getNewRemoteCommentDto());
         acknowledgment.acknowledge();
     }
