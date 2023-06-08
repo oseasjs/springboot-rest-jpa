@@ -35,8 +35,8 @@ import com.springboot.rest.api.blog.model.Post;
 
 public class CommentControllerTest extends AbstractControllerTest {
 
-  private Post postMocked = new Post(BigDecimal.ONE.longValue(), TITLE, CONTENT, now, GeneratedTypeEnum.MANUAL);
-  private Comment commentMocked = new Comment(BigDecimal.ONE.longValue(), CONTENT, AUTHOR, now, GeneratedTypeEnum.MANUAL, postMocked);
+  private Post postMocked = new Post(BigDecimal.ONE.longValue(), TITLE, CONTENT, now, GeneratedTypeEnum.MANUAL, null, null);
+  private Comment commentMocked = new Comment(BigDecimal.ONE.longValue(), CONTENT, AUTHOR, now, GeneratedTypeEnum.MANUAL, postMocked, null, null);
 
   @Test
   public void notLoggedIn_shouldNotExecuteGetCommentsEndpoint() throws Exception {

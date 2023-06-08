@@ -29,7 +29,7 @@ public class PostServiceTest extends BaseBlogTest {
   private PostService postService;
 
   private Post existingPost;
-  private Post postMocked = new Post(null, TITLE + "Post", CONTENT, now, GeneratedTypeEnum.MANUAL);
+  private Post postMocked = new Post(null, TITLE + "Post", CONTENT, now, GeneratedTypeEnum.MANUAL, null, null);
 
   @BeforeEach
   public void setup() {

@@ -4,6 +4,7 @@ import com.springboot.rest.api.blog.model.User;
 import com.springboot.rest.api.blog.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 

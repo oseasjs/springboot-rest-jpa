@@ -3,10 +3,7 @@ package com.springboot.rest.api.blog.model;
 import com.springboot.rest.api.blog.enums.GeneratedTypeEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.envers.Audited;
 
 import java.time.LocalDateTime;
@@ -20,6 +17,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Post extends BaseAudit {
 
   @Id
@@ -39,5 +37,11 @@ public class Post extends BaseAudit {
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private GeneratedTypeEnum generatedType;
+
+  @Column
+  private LocalDateTime moderationDate;
+
+  @Column
+  private String moderationReason;
 
 }

@@ -13,11 +13,35 @@ Blog application to add/get Posts and Comments;
 * Blog data persisted on blog schema;
 * Audit data persisted on audit schema;
 
+The database scripts are versioned using liquibase, including ddl and dml scripts;
+The application provide endpoints secured by Spring Security but swagger, h2 and authentication endpoints are open;
+A token is required to call endpoints and could be generated using `/register` and `/authenticate` enpoints;
+The application can generate `post` and `comments` automatically based on external api: `jsonplaceholder.com` and the relaed endpoints are available on swagger;
+There are 2 scheduled jobs running to moderate posts title/content and comments content and the trigger time is defined on properties file; 
+The moderation only set a moderation date and moderation reason based on some invalid words seeded on db table and is being cached;  
+
 ### Requirements
 
 To build the project, Java 17 and Maven 3 are required. 
 You can install it using the SDKMan: 
 https://sdkman.io/install
+
+### Kafka and Docker Compose
+
+The docker-compose.yml file is available on root page.
+
+Services required by application and available on docker-compose file:
+* kafka - port 29092;
+* zookeeper - port 2181;
+* kafdrop - port 19000;
+
+Basic commands to execute docker-compose:
+* docker-compose up -d 
+* docker-compose start
+* docker-compose stop
+* docker-compose down --volume
+
+Kafka console could be accessed using kafdrop on: http://localhost:19000
 
 #### Build and Run
 
@@ -44,15 +68,15 @@ Liquibase is also used to execute database scripts to create table and the scrip
 The endpoints are available on:
 http://localhost:8080/swagger-ui/index.html
 
-
 ### Bootstrapped with:
 
 - Java 17;
 - Maven;
 - Spring Boot 3;
-- Spring Cloud 2022;
+- Spring Cloud 2022.0.3;
 - Spring Web;
 - Spring Data;
+- Spring Cache;
 - Spring Validation;
 - Spring Actuator;
 - Spring OpenFeign;
@@ -68,12 +92,14 @@ http://localhost:8080/swagger-ui/index.html
 - MockMVC;
 - Sonar;
 - Docker;
+- Docker Compose;
 - Github Action;
 - CodeCov;
+- Kafka;
+- Scheduler;
+- Cache;
 
 ### TODO
 
 - Resilient4J
-- ActiveMQ
-- Micrometer
 - Keycloak: https://github.com/eazybytes/springsecurity6

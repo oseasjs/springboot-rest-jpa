@@ -36,8 +36,8 @@ public class CommentServiceTest extends BaseBlogTest {
   
   private Post existingPost;
 
-  private final Post postMocked = new Post(null, TITLE + " Comment", CONTENT, now, GeneratedTypeEnum.MANUAL);
-  private Comment commentMocked = new Comment(null, CONTENT, AUTHOR, now, GeneratedTypeEnum.MANUAL, postMocked);
+  private final Post postMocked = new Post(null, TITLE + " Comment", CONTENT, now, GeneratedTypeEnum.MANUAL, null, null);
+  private Comment commentMocked = new Comment(null, CONTENT, AUTHOR, now, GeneratedTypeEnum.MANUAL, postMocked, null, null);
 
   @BeforeEach
   public void setup() {
