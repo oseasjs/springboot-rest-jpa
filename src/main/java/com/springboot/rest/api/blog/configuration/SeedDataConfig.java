@@ -24,7 +24,7 @@ public class SeedDataConfig implements CommandLineRunner {
 
         if (Arrays.stream(env.getActiveProfiles()).noneMatch(_env -> (_env.equalsIgnoreCase("test")))) {
             // Create default user in DB: username = username | password = password
-            userDetailsService.save(new User(null, "username", "password"));
+            userDetailsService.save(new User(null, "string", "string"));
         }
 
     }

@@ -13,10 +13,14 @@ public class KafkaProducerService {
 
     private KafkaTemplate<String, String> kafkaTemplate;
 
+    public void sendMessage(KafkaTopicEnum topicEnum, String message) {
+        log.info("Producing message -> topic={}, message={}", message);
+        kafkaTemplate.send(topicEnum.name(), message);
+    }
 
     public void sendMessage(KafkaTopicEnum topicEnum, String key, String message) {
-        log.info("Producing message -> topic={}, key={}, message={}", topicEnum.name(), key, message);
-        kafkaTemplate.send(topicEnum.name(), key, message);
+        log.info("Producing ordered message -> topic={}, key={}, message={}", topicEnum.name(), message);
+        kafkaTemplate.send(topicEnum.name(), message);
     }
 
 }

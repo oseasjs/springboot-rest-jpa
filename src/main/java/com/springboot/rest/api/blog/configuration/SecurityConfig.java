@@ -53,9 +53,9 @@ public class SecurityConfig {
         .and()
         .cors().disable()
         .csrf().disable()
+        .formLogin().disable()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .formLogin().disable()
         .exceptionHandling()
           .authenticationEntryPoint(unauthorizedHandler)
           .and()
@@ -70,7 +70,6 @@ public class SecurityConfig {
             .permitAll()
             .anyRequest()
             .authenticated()
-//            .hasRole("USER")
         );
 
     return http.build();

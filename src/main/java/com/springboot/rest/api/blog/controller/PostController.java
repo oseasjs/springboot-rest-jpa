@@ -113,7 +113,7 @@ public class PostController {
     log.debug("Adding {} posts from Json Place Holder Async", newRemotePostDto.getLimit());
     String message = objectMapper.writeValueAsString(newRemotePostDto);
     String key = UUID.randomUUID().toString();
-    kafkaProducerService.sendMessage(KafkaTopicEnum.POST, key, message);
+    kafkaProducerService.sendMessage(KafkaTopicEnum.POST, message);
   }
 
 }

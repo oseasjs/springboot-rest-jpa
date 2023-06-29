@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.springboot.rest.api.blog.security.WithMockUserSecurity;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -63,7 +64,7 @@ public class CommentControllerTest extends AbstractControllerTest {
 
   }
 
-  @WithMockUser
+  @WithMockUserSecurity
   @Test
   public void shouldAddCommentSuccessfully() throws Exception {
 
@@ -83,7 +84,7 @@ public class CommentControllerTest extends AbstractControllerTest {
     ;
   }
 
-  @WithMockUser
+  @WithMockUserSecurity
   @Test
   public void shouldAddCommentMissingContentSuccessfully() throws Exception {
     Map<String, Object> newPostDtoMap = newCommentDtoAsMap();

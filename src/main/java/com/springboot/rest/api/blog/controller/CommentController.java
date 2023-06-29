@@ -105,7 +105,7 @@ public class CommentController {
     NewRemoteCommentAsyncDto commentAsyncDto = new NewRemoteCommentAsyncDto(postId, newRemoteCommentDto);
     String message = objectMapper.writeValueAsString(commentAsyncDto);
     String key = UUID.randomUUID().toString();
-    kafkaProducerService.sendMessage(KafkaTopicEnum.COMMENT, key, message);
+    kafkaProducerService.sendMessage(KafkaTopicEnum.COMMENT, message);
   }
 
 }

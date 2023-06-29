@@ -7,6 +7,7 @@ import com.springboot.rest.api.blog.repository.PostRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class CommentService {
     return this.commentRepository.existsByPostIdAndAuthor(postId, author);
   }
 
+  @Transactional()
   public Comment addComment(Comment comment) {
 
     this.postRepository

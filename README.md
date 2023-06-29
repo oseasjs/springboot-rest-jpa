@@ -15,8 +15,9 @@ Blog application to add/get Posts and Comments;
 
 The database scripts are versioned using liquibase, including ddl and dml scripts;
 The application provide endpoints secured by Spring Security but swagger, h2 and authentication endpoints are open;
-A token is required to call endpoints and could be generated using `/register` and `/authenticate` enpoints;
-The application can generate `post` and `comments` automatically based on external api: `jsonplaceholder.com` and the relaed endpoints are available on swagger;
+A token is required to call endpoints and could be generated using `/register` and `/authenticate` endpoints;
+A sample user was seeded by application on `SeedDataConfig` class: `username: string`, `password: string`;
+The application can generate `post` and `comments` automatically based on external api: `jsonplaceholdser.com` and the relaed endpoints are available on swagger;
 There are 2 scheduled jobs running to moderate posts title/content and comments content and the trigger time is defined on properties file; 
 The moderation only set a moderation date and moderation reason based on some invalid words seeded on db table and is being cached;  
 
