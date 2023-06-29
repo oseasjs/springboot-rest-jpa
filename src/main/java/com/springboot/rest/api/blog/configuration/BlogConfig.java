@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -20,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 @EnableJpaAuditing
 @EnableCaching
 @EnableScheduling
+@EnableAsync
 @Slf4j
 public class BlogConfig {
 
@@ -41,7 +43,7 @@ public class BlogConfig {
     };
   }
 
-  @CacheEvict(cacheNames = { "invalidWords" }, allEntries = true)
+  @CacheEvict(cacheNames = { "invalidWords", "placeHolderPostsCache", "placeHolderCommentsCache" }, allEntries = true)
   @Scheduled(fixedDelayString = "${blog.cache.ttl}")
   public void cacheEvict() {
     log.info("Cleaning caches");

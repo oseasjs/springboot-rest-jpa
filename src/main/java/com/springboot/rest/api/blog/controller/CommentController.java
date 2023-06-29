@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/posts/{postId}/comments")
@@ -103,9 +102,7 @@ public class CommentController {
   public void addRemoteCommentAsync(@PathVariable Long postId, @Valid @RequestBody NewRemoteCommentDto newRemoteCommentDto) throws JsonProcessingException {
     log.debug("Adding {} comments with postId {} from Json Place Holder Async", newRemoteCommentDto.getLimit(), postId);
     NewRemoteCommentAsyncDto commentAsyncDto = new NewRemoteCommentAsyncDto(postId, newRemoteCommentDto);
-    String message = objectMapper.writeValueAsString(commentAsyncDto);
-    String key = UUID.randomUUID().toString();
-    kafkaProducerService.sendMessage(KafkaTopicEnum.COMMENT, message);
+    kafkaProducerService.sendComment(KafkaTopicEnum.COMMENT, commentAsyncDto);
   }
 
 }

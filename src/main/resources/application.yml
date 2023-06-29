@@ -19,11 +19,11 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     generate-ddl: false
-    show-sql: true
+    show-sql: false
     properties:
       org:
         hibernate:
-          show_sql: true
+          show_sql: false
           format_sql: true
           envers:
             default_schema: audit
@@ -36,6 +36,8 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.springboot.rest.api.blog.controller.dto,com.springboot.rest.api.blog.kafka.dto
       max-poll-records: 1
       fetch-max-wait: 36000
       enable-auto-commit: false
