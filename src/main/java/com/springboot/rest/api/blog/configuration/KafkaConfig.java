@@ -22,6 +22,7 @@ public class KafkaConfig {
     public NewTopic postTopic() {
         return TopicBuilder.name(postTopicName)
                 .partitions(2)
+//                .replicas(3)
                 .config(TopicConfig.COMPRESSION_TYPE_CONFIG, COMPRESSION_TYPE_CONFIG_VALUE)
                 .build();
     }
@@ -30,6 +31,7 @@ public class KafkaConfig {
     public NewTopic commentTopic() {
         return TopicBuilder.name(commentTopicName)
                 .partitions(2)
+//                .replicas(3)
                 .config(TopicConfig.COMPRESSION_TYPE_CONFIG, COMPRESSION_TYPE_CONFIG_VALUE)
                 .build();
     }

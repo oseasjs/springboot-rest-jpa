@@ -32,17 +32,17 @@ spring:
   kafka:
     bootstrap-servers: ${kafka_bootstrap_servers:localhost:29092}
     consumer:
-      client-id: springboot-kafka
+      client-id: blog-consumer
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: com.springboot.rest.api.blog.controller.dto,com.springboot.rest.api.blog.kafka.dto
+        spring.json.trusted.packages: com.springboot.rest.api.blog.kafka.dto
       max-poll-records: 1
       fetch-max-wait: 36000
       enable-auto-commit: false
     producer:
-      client-id: springboot-kafka
+      client-id: blog-producer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       retries: 3
