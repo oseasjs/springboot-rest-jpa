@@ -5,8 +5,6 @@ import com.springboot.rest.api.blog.configuration.SecurityConfig;
 import com.springboot.rest.api.blog.exception.UnauthorizedHandler;
 import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderClient;
 import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderService;
-import com.springboot.rest.api.blog.kafka.consumer.KafkaConsumerService;
-import com.springboot.rest.api.blog.kafka.producer.KafkaProducerService;
 import com.springboot.rest.api.blog.security.JwtAuthenticationFilter;
 import com.springboot.rest.api.blog.security.JwtUtils;
 import com.springboot.rest.api.blog.service.CommentService;
@@ -52,12 +50,6 @@ public abstract class AbstractControllerTest extends BaseBlogTest {
 
   @MockBean
   protected AuthenticationManager authenticationManager;
-
-  @MockBean
-  protected KafkaProducerService kafkaProducerService;
-
-  @MockBean
-  protected KafkaConsumerService kafkaConsumerService;
 
   @MockBean
   protected KafkaTemplate kafkaTemplate;

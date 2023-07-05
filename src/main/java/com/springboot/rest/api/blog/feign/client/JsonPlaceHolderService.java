@@ -24,7 +24,7 @@ public class JsonPlaceHolderService {
       .getPosts()
       .stream()
       .filter(p -> !postService.existsByTitle(p.getTitle()))
-      .limit(1)
+      .limit(newRemotePostDto.getLimit())
       .map(PostMapper.INSTANCE::toEntity)
       .forEach(postService::add);
     log.info("Post saved from Json Place Holder");
@@ -36,7 +36,7 @@ public class JsonPlaceHolderService {
       .getComments(postId)
       .stream()
       .filter(c -> !commentService.existsByPostIdAndAuthor(c.getPostId(), c.getAuthor()))
-      .limit(1)
+      .limit(newRemoteCommentDto.getLimit())
       .map(CommentMapper.INSTANCE::toEntity)
       .forEach(commentService::addComment);
     log.info("Comment saved from Json Place Holder");

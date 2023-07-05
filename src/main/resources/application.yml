@@ -29,27 +29,6 @@ spring:
             default_schema: audit
   flyway:
     default-schema: blog
-  kafka:
-    bootstrap-servers: ${kafka_bootstrap_servers:localhost:29092}
-    consumer:
-      client-id: blog-consumer
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: com.springboot.rest.api.blog.kafka.dto
-      max-poll-records: 1
-      fetch-max-wait: 36000
-      enable-auto-commit: false
-    producer:
-      client-id: blog-producer
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      retries: 3
-    listener:
-      poll-timeout: 1800000
-      concurrency: 1
-      ack-mode: manual_immediate
 
 security:
   jwt:
@@ -77,15 +56,6 @@ jplaceholder:
   url: https://jsonplaceholder.typicode.com
 
 blog:
-  kafka:
-    post:
-      topic: POST
-      prefix: postConsumer
-      group-id: postConsumerGroupId
-    comment:
-      topic: COMMENT
-      prefix: commentConsumer
-      group-id: commentConsumerGroupId
   moderation:
     post:
       fixed-rate: 15000 # Every 15 seconds
