@@ -41,7 +41,6 @@ springdoc:
 logging:
   level:
     org.hibernate.envers.boot: ERROR
-    org.apache.kafka.clients: ERROR
 
 management:
   endpoints:
