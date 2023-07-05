@@ -5,10 +5,7 @@ import com.springboot.rest.api.blog.controller.dto.NewPostDto;
 import com.springboot.rest.api.blog.controller.dto.NewRemotePostDto;
 import com.springboot.rest.api.blog.controller.dto.PostDto;
 import com.springboot.rest.api.blog.controller.mapper.PostMapper;
-import com.springboot.rest.api.blog.enums.KafkaTopicEnum;
 import com.springboot.rest.api.blog.feign.client.JsonPlaceHolderService;
-import com.springboot.rest.api.blog.kafka.dto.NewRemotePostAsyncDto;
-import com.springboot.rest.api.blog.kafka.producer.KafkaProducerService;
 import com.springboot.rest.api.blog.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,7 +31,6 @@ import java.util.Optional;
 public class PostController {
   private PostService postService;
   private JsonPlaceHolderService jsonPlaceHolderService;
-  private KafkaProducerService kafkaProducerService;
   private ObjectMapper objectMapper;
 
   @Operation(summary = "Get All Posts", responses = {
@@ -49,7 +45,7 @@ public class PostController {
   public List<PostDto> findAllPost() {
     log.debug("Getting all post");
     return Optional
-      .of(this.postService.findAll())
+      .of(postService.findAll())
       .map(PostMapper.INSTANCE::asDtoList)
       .get();
   }
@@ -66,7 +62,7 @@ public class PostController {
   public PostDto findById(@PathVariable Long id) {
     log.debug("Getting post with id {}", id);
     return Optional
-      .of(this.postService.findById(id))
+      .of(postService.findById(id))
       .map(PostMapper.INSTANCE::toDTO)
       .get();
   }
@@ -98,19 +94,6 @@ public class PostController {
   public void addRemotePosts(@Valid @RequestBody NewRemotePostDto newRemotePostDto) {
     log.debug("Adding {} posts from Json Place Holder", newRemotePostDto.getLimit());
     jsonPlaceHolderService.addRemotePosts(newRemotePostDto);
-  }
-
-  @Operation(summary = "Add news Posts from Json Place Holder public API ASYNCHRONOUSLY", responses = {
-          @ApiResponse(responseCode = "201",
-                  description = "Ok",
-                  content = @Content(mediaType = "application/json")),
-          @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)
-  })
-  @PostMapping("/remotes/async")
-  @ResponseStatus(HttpStatus.CREATED)
-  public void addRemotePostsAsync(@Valid @RequestBody NewRemotePostDto newRemotePostDto) throws Exception {
-    log.debug("Adding {} posts from Json Place Holder Async", newRemotePostDto.getLimit());
-    kafkaProducerService.sendPost(KafkaTopicEnum.POST, new NewRemotePostAsyncDto(newRemotePostDto));
   }
 
 }

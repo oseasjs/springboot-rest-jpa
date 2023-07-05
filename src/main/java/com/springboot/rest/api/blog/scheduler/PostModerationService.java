@@ -1,6 +1,5 @@
 package com.springboot.rest.api.blog.scheduler;
 
-import com.springboot.rest.api.blog.repository.CommentRepository;
 import com.springboot.rest.api.blog.repository.PostRepository;
 import com.springboot.rest.api.blog.service.InvalidWordService;
 import lombok.AllArgsConstructor;
@@ -15,10 +14,9 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class ModerationService {
+public class PostModerationService {
 
     private PostRepository postRepository;
-    private CommentRepository commentRepository;
     private InvalidWordService invalidWordService;
 
     // Every 15 seconds using fixed rate
@@ -41,27 +39,6 @@ public class ModerationService {
                         });
 
                     postRepository.save(post);
-                });
-    }
-
-    // Every 20 seconds using chron expression
-    @Scheduled(cron = "${blog.moderation.comment.cron}")
-    public void moderateComments() {
-        commentRepository
-                .findByModerationDateNull(Pageable.ofSize(2))
-                .forEach(comment -> {
-                    comment.setModerationDate(LocalDateTime.now());
-
-                    invalidWordService.findAllInvalidWordList()
-                        .stream()
-                        .filter(invalidWord -> comment.getContent().toLowerCase().contains(invalidWord))
-                        .reduce((partialString, element) -> partialString + ", " + element)
-                        .ifPresent(invalidWords -> {
-                            log.info("Invalid words on comment: [{}] - comment: {}", invalidWords, comment);
-                            comment.setModerationReason(String.format("Invalid words: [%s]", invalidWords));
-                        });
-
-                    commentRepository.save(comment);
                 });
     }
 

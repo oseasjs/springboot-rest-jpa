@@ -17,7 +17,7 @@ The database scripts are versioned using liquibase, including ddl and dml script
 The application provide endpoints secured by Spring Security but swagger, h2 and authentication endpoints are open;
 A token is required to call endpoints and could be generated using `/register` and `/authenticate` endpoints;
 A sample user was seeded by application on `SeedDataConfig` class: `username: string`, `password: string`;
-The application can generate `post` and `comments` automatically based on external api: `jsonplaceholdser.com` and the relaed endpoints are available on swagger;
+The application can generate `post` and `comments` automatically based on external api: `jsonplaceholdser.com` and the related endpoints are available on swagger;
 There are 2 scheduled jobs running to moderate posts title/content and comments content and the trigger time is defined on properties file; 
 The moderation only set a moderation date and moderation reason based on some invalid words seeded on db table and is being cached;  
 
@@ -27,28 +27,11 @@ To build the project, Java 17 and Maven 3 are required.
 You can install it using the SDKMan: 
 https://sdkman.io/install
 
-### Kafka and Docker Compose
-
-The docker-compose.yml file is available on root page.
-
-Services required by application and available on docker-compose file:
-* kafka - port 29092;
-* zookeeper - port 2181;
-* kafdrop - port 19000;
-
-Basic commands to execute docker-compose:
-* docker-compose up -d 
-* docker-compose start
-* docker-compose stop
-* docker-compose down --volume
-
-Kafka console could be accessed using kafdrop on: http://localhost:19000
-
 #### Build and Run
 
 To build the project, you should execute: mvn clean package
 To run the project you should execute: mvn springboot:run
-You can also build and run the project using your prefered IDE, such as: Intellij, VSCode or Eclipse
+You can also build and run the project using your preferred IDE, such as: Intellij, VSCode or Eclipse
 
 ### Database
 
@@ -93,14 +76,13 @@ http://localhost:8080/swagger-ui/index.html
 - MockMVC;
 - Sonar;
 - Docker;
-- Docker Compose;
 - Github Action;
 - CodeCov;
-- Kafka;
 - Scheduler;
 - Cache;
 
 ### TODO
 
 - Resilient4J
+- Micrometer
 - Keycloak: https://github.com/eazybytes/springsecurity6

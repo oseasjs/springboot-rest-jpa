@@ -23,6 +23,6 @@ public interface PostMapper {
 
   PostDto toDTO(Post destination);
 
-  List<PostDto> asDtoList(List<Post> commentList);
+  List<PostDto> asDtoList(List<Post> postList);
 
 }
